@@ -1,6 +1,3 @@
-def main():
-    print("Hello from backend!")
+from core.server import  get_app
 
-
-if __name__ == "__main__":
-    main()
+app = get_app()
