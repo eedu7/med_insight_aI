@@ -14,7 +14,7 @@ import {
 import { LogOutIcon, PlusSquareIcon } from "lucide-react";
 import Link from "next/link";
 
-export const WorkstationSidebar = () => {
+export const DashboardSidebar = () => {
     return (
         <Sidebar collapsible="icon">
             {/* Header */}

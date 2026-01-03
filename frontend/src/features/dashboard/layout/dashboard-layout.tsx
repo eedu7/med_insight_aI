@@ -1,15 +1,15 @@
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import type React from "react";
-import { WorkstationSidebar } from "../components/workstation-sidebar";
+import { DashboardSidebar } from "../components/dashboard-sidebar";
 
-export function WorkstationLayout({
+export function DashboardLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
     return (
         <SidebarProvider defaultOpen={false}>
-            <WorkstationSidebar />
+            <DashboardSidebar />
             <SidebarInset>{children}</SidebarInset>
         </SidebarProvider>
     );
