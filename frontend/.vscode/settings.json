@@ -1,10 +1,16 @@
 {
     "biome.enabled": true,
     "editor.codeActionsOnSave": {
+        "source.addMissingImports.ts": "always",
         "source.biome": "always",
         "source.fixAll.biome": "always",
+        "source.fixAll.ts": "always",
+        "source.organizeImports": "always",
         "source.organizeImports.biome": "always",
-        "source.sort.json": "always"
+        "source.removeUnused.ts": "always",
+        "source.removeUnusedImports": "always",
+        "source.sort.json": "always",
+        "source.sortImports": "always"
     },
     "editor.fontSize": 16,
     "editor.formatOnSave": true,
