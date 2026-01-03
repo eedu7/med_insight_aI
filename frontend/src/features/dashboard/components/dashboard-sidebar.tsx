@@ -58,7 +58,7 @@ export const DashboardSidebar = () => {
                 </SidebarMenu>
             </SidebarHeader>
 
-            <SidebarContent>
+            <SidebarContent className="flex flex-col h-full overflow-hidden">
                 {/* Previous Chats */}
                 <PreviousChats />
                 {/* Previous Scans */}

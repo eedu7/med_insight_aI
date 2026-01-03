@@ -1,6 +1,5 @@
 "use client";
 import {
-    SidebarContent,
     SidebarGroup,
     SidebarGroupContent,
     SidebarGroupLabel,
@@ -17,20 +16,20 @@ export const PreviousChats = () => {
 
     return (
         <Activity mode={open ? "visible" : "hidden"}>
-            <SidebarContent>
-                <SidebarGroup>
-                    <SidebarGroupLabel>Previous Chats</SidebarGroupLabel>
-                    <SidebarGroupContent>
-                        <SidebarMenu>
-                            <SidebarMenuItem>
+            <SidebarGroup className="flex-1 flex flex-col min-h-0">
+                <SidebarGroupLabel>Previous Chats</SidebarGroupLabel>
+                <SidebarGroupContent>
+                    <SidebarMenu>
+                        {Array.from({ length: 25 }).map((_, index) => (
+                            <SidebarMenuItem key={index}>
                                 <SidebarMenuButton asChild>
                                     <Link href="#">Lorem ipsum dolor sit.</Link>
                                 </SidebarMenuButton>
                             </SidebarMenuItem>
-                        </SidebarMenu>
-                    </SidebarGroupContent>
-                </SidebarGroup>
-            </SidebarContent>
+                        ))}
+                    </SidebarMenu>
+                </SidebarGroupContent>
+            </SidebarGroup>
         </Activity>
     );
 };
