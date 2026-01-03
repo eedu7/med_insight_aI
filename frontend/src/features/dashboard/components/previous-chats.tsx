@@ -1,4 +1,6 @@
+// previous-chats.tsx
 "use client";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
     SidebarGroup,
     SidebarGroupContent,
@@ -16,18 +18,21 @@ export const PreviousChats = () => {
 
     return (
         <Activity mode={open ? "visible" : "hidden"}>
-            <SidebarGroup className="flex-1 flex flex-col min-h-0">
-                <SidebarGroupLabel>Previous Chats</SidebarGroupLabel>
-                <SidebarGroupContent>
-                    <SidebarMenu>
-                        {Array.from({ length: 25 }).map((_, index) => (
-                            <SidebarMenuItem key={index}>
+            <SidebarGroup className="flex-1 flex flex-col min-h-0 p-0">
+                <SidebarGroupLabel className="px-4 pt-4">
+                    Previous Chats
+                </SidebarGroupLabel>
+
+                <SidebarGroupContent className="flex-1 min-h-0">
+                    <ScrollArea className="h-full w-full">
+                        <SidebarMenu className="px-2">
+                            <SidebarMenuItem>
                                 <SidebarMenuButton asChild>
-                                    <Link href="#">Lorem ipsum dolor sit.</Link>
+                                    <Link href="#">Lorem, ipsum dolor.</Link>
                                 </SidebarMenuButton>
                             </SidebarMenuItem>
-                        ))}
-                    </SidebarMenu>
+                        </SidebarMenu>
+                    </ScrollArea>
                 </SidebarGroupContent>
             </SidebarGroup>
         </Activity>

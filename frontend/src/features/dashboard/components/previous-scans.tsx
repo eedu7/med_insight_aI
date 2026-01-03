@@ -1,4 +1,5 @@
 "use client";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
     SidebarGroup,
     SidebarGroupContent,
@@ -16,16 +17,20 @@ export const PreviousScans = () => {
 
     return (
         <Activity mode={open ? "visible" : "hidden"}>
-            <SidebarGroup className="flex-1 flex flex-col min-h-0">
-                <SidebarGroupLabel>Previous Scans</SidebarGroupLabel>
-                <SidebarGroupContent>
-                    <SidebarMenu>
-                        <SidebarMenuItem>
-                            <SidebarMenuButton asChild>
-                                <Link href="#">Lorem ipsum dolor sit.</Link>
-                            </SidebarMenuButton>
-                        </SidebarMenuItem>
-                    </SidebarMenu>
+            <SidebarGroup className="flex-1 flex flex-col min-h-0 p-0">
+                <SidebarGroupLabel className="px-4 pt-4">
+                    Previous Scans
+                </SidebarGroupLabel>
+                <SidebarGroupContent className="flex-1 min-h-0">
+                    <ScrollArea className="h-full w-full">
+                        <SidebarMenu className="px-2">
+                            <SidebarMenuItem>
+                                <SidebarMenuButton asChild>
+                                    <Link href="#">Sit amet consectetur.</Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                        </SidebarMenu>
+                    </ScrollArea>
                 </SidebarGroupContent>
             </SidebarGroup>
         </Activity>
