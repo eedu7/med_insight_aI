@@ -2,17 +2,22 @@ import {
     Sidebar,
     SidebarContent,
     SidebarFooter,
-    SidebarGroup,
-    SidebarGroupContent,
-    SidebarGroupLabel,
     SidebarHeader,
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
-    SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { LogOutIcon, PlusSquareIcon } from "lucide-react";
+import {
+    CrownIcon,
+    LogOutIcon,
+    PlusSquareIcon,
+    ScanSearchIcon,
+    SearchIcon,
+} from "lucide-react";
 import Link from "next/link";
+import { DashboardSidebarTrigger } from "./dashboard-sidebar-trigger";
+import { PreviousChats } from "./previous-chats";
+import { PreviousScans } from "./previous-scans";
 
 export const DashboardSidebar = () => {
     return (
@@ -20,33 +25,57 @@ export const DashboardSidebar = () => {
             {/* Header */}
             <SidebarHeader>
                 <SidebarMenu>
+                    {/* Sidebar Trigger */}
                     <SidebarMenuItem>
-                        <SidebarTrigger />
+                        <DashboardSidebarTrigger />
                     </SidebarMenuItem>
+
+                    {/* New Chat */}
                     <SidebarMenuItem>
                         <SidebarMenuButton asChild>
-                            <Link href="/">
+                            <Link href="/chat">
                                 <PlusSquareIcon />
                                 New Chat
                             </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
+                    {/* New Scan */}
+                    <SidebarMenuItem>
+                        <SidebarMenuButton asChild>
+                            <Link href="/scan">
+                                <ScanSearchIcon />
+                                New Scan
+                            </Link>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    {/* Search */}
+                    <SidebarMenuItem>
+                        <SidebarMenuButton>
+                            <SearchIcon />
+                            Search
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
                 </SidebarMenu>
             </SidebarHeader>
 
-            {/* Content */}
             <SidebarContent>
-                <SidebarGroup>
-                    <SidebarGroupLabel></SidebarGroupLabel>
-                    <SidebarGroupContent>
-                        <SidebarMenu></SidebarMenu>
-                    </SidebarGroupContent>
-                </SidebarGroup>
+                {/* Previous Chats */}
+                <PreviousChats />
+                {/* Previous Scans */}
+                <PreviousScans />
             </SidebarContent>
 
             {/* Footer */}
             <SidebarFooter>
                 <SidebarMenu>
+                    {/* Upgrade Plan */}
+                    <SidebarMenuItem>
+                        <SidebarMenuButton>
+                            <CrownIcon />
+                            Upgrade Plan
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    {/* Log Out */}
                     <SidebarMenuItem>
                         <SidebarMenuButton>
                             <LogOutIcon />
