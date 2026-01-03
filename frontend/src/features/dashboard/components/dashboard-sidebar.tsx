@@ -12,9 +12,9 @@ import {
     LogOutIcon,
     PlusSquareIcon,
     ScanSearchIcon,
-    SearchIcon,
 } from "lucide-react";
 import Link from "next/link";
+import { DashboardSearch } from "./dashboard-search";
 import { DashboardSidebarTrigger } from "./dashboard-sidebar-trigger";
 import { PreviousChats } from "./previous-chats";
 import { PreviousScans } from "./previous-scans";
@@ -50,10 +50,7 @@ export const DashboardSidebar = () => {
                     </SidebarMenuItem>
                     {/* Search */}
                     <SidebarMenuItem>
-                        <SidebarMenuButton>
-                            <SearchIcon />
-                            Search
-                        </SidebarMenuButton>
+                        <DashboardSearch />
                     </SidebarMenuItem>
                 </SidebarMenu>
             </SidebarHeader>
