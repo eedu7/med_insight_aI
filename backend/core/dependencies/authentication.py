@@ -24,7 +24,7 @@ class AuthenticationRequired:
             if not user_id_str:
                 raise UnauthorizedException("Invalid token payload")
 
-            user_id = UUID(user_id_str)  # convert to UUID
+            user_id = UUID(user_id_str)
 
             if not hasattr(request.state, "user"):
                 request.state.user = CurrentUser()

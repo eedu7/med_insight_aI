@@ -1,4 +1,4 @@
-from controllers import AuthController
+from controllers import AuthController, UserController
 from core.dependencies import SessionDep
 from repositories import UserRepository
 
@@ -14,3 +14,7 @@ class Factory:
     def get_auth_controller(self, session: SessionDep) -> AuthController:
         repo = self.get_user_repository(session)
         return AuthController(repo)
+
+    def get_user_controller(self, session: SessionDep) -> UserController:
+        repo = self.get_user_repository(session)
+        return UserController(repo)

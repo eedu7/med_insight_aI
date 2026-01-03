@@ -1,0 +1,19 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  GREETING: Hello, World!
+
+tasks:
+  default:
+    cmds:
+      - echo "{{.GREETING}}"
+    silent: true
+  dev:
+    cmds:
+      - uv run fastapi dev main.py
+
+  dev:network:
+    cmds:
+      - uv run fastapi dev main.py --host 192.168.18.33
