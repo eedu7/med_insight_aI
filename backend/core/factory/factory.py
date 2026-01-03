@@ -18,3 +18,6 @@ class Factory:
     def get_user_controller(self, session: SessionDep) -> UserController:
         repo = self.get_user_repository(session)
         return UserController(repo)
+
+
+factory: Factory = Factory()
