@@ -1,5 +1,13 @@
 {
+    "biome.enabled": true,
+    "editor.codeActionsOnSave": {
+        "source.biome": "always",
+        "source.fixAll.biome": "always",
+        "source.organizeImports.biome": "always",
+        "source.sort.json": "always"
+    },
     "editor.fontSize": 16,
     "editor.formatOnSave": true,
-    "files.autoSave": "afterDelay"
+    "files.autoSave": "afterDelay",
+    "explorer.compactFolders": false
 }
