@@ -22,6 +22,13 @@ class Config(BaseSettings):
     # CORS
     CORS_ORIGINS: str = ""
 
+    # Minio
+    MINIO_ENDPOINT: str = "localhost:9000"
+    MINIO_ACCESS_KEY: str = "minioadmin"
+    MINIO_SECRET_KEY: str = "minioadmin123"
+    MINIO_BUCKET_NAME: str = "med-insight"
+    MINIO_SECURE: bool = False
+
     model_config = SettingsConfigDict(
         env_file=".env", env_file_encoding="utf-8", case_sensitive=True, extra="ignore"
     )
