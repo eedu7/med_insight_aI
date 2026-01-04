@@ -5,6 +5,7 @@
         "source.biome": "always",
         "source.fixAll.biome": "always",
         "source.fixAll.ts": "always",
+        "source.organizeImports": "always",
         "source.organizeImports.biome": "always",
         "source.removeUnusedImports": "always",
         "source.sort.json": "always",
