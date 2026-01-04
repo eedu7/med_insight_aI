@@ -21,7 +21,7 @@ class ChatRepository:
         if user_id:
             stmt.where(Chat.user_id == user_id)
         result = await self.session.execute(stmt)
-        return result.scalars().all()
+        return result.scalars().unique().all()
 
     async def create_chat(self, attributes: Dict) -> Chat:
         chat = Chat(**attributes)

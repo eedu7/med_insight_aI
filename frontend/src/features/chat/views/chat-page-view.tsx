@@ -22,8 +22,14 @@ export default function ChatPageView() {
     const [input, setInput] = useState("");
     const [messages, setMessages] = useState<Message[]>([]);
     const [status, setStatus] = useState<"ready" | "streaming">("ready");
-    const { data: hfModels } = useGetModels()
-    const [selectedModel, setSelectedModel] = useState(hfModels?.[1]?.hfModelId || "");
+    const { data: hfModels, isSuccess } = useGetModels()
+    const [selectedModel, setSelectedModel] = useState(hfModels?.[0]?.hfModelId || "");
+
+
+    if (isSuccess && !selectedModel && hfModels && hfModels.length > 0) {
+        setSelectedModel(hfModels[1].hfModelId);
+    }
+
 
     const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -44,6 +50,7 @@ export default function ChatPageView() {
     const handleSendMessage = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!input.trim() || status !== "ready") return;
+
 
         const userContent = input;
 

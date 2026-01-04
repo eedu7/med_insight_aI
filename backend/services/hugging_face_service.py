@@ -69,7 +69,7 @@ class HuggingFaceService:
             model=model,
             messages=messages,  # type: ignore
             stream=True,
-            max_tokens=max_tokens,  # type: ignore
+            # max_tokens=max_tokens,  # type: ignore
         )
         if stream:
             for chunk in stream_content:

@@ -58,7 +58,7 @@ async def create_chat_message(
 
     async def stream_generator():
         gen = hf.text_generation(
-            messages={"role": "user", "content": data.content},
+            messages=[{"role": "user", "content": data.content}],  # type: ignore
             model=data.model_name,
             stream=stream,
         )
@@ -67,8 +67,8 @@ async def create_chat_message(
 
         for chunk in gen:
             if chunk:
-                ai_response.append(chunk)
-                yield chunk
+                ai_response.append(chunk.decode("utf-8"))  # type: ignore
+                yield chunk.decode("utf-8")  # type: ignore
 
         content = "".join(ai_response)
 
@@ -85,13 +85,15 @@ async def create_chat_message(
         return StreamingResponse(stream_generator(), media_type="text/event-stream")
 
     result = hf.text_generation(
-        messages={"role": "user", "content": data.content}, model=data.model_name, stream=False
+        messages=[{"role": "user", "content": data.content}],  # type: ignore
+        model=data.model_name,
+        stream=False,
     )
     # Save AI Response
     await chat_controller.create_chat_message(
         role="assistant",
         model_id=data.model_id,
         user_id=user_id,
-        content=str(result),
+        content=(str(result)).decode("utf-8"),  # type: ignore
         chat_id=data.chat_id,
     )

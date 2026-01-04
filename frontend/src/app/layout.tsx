@@ -1,8 +1,8 @@
+import { Toaster } from "@/components/ui/sonner";
+import TanstackReactQuery from "@/providers/tanstack-react-query";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Toaster } from "@/components/ui/sonner";
-import TanstackReactQuery from "@/providers/tanstack-react-query";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
