@@ -1,4 +1,5 @@
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { ChatProvider } from "@/features/chat/context/chat-context";
 import type React from "react";
 import { DashboardSidebar } from "../components/dashboard-sidebar";
 
@@ -8,9 +9,11 @@ export function DashboardLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <SidebarProvider defaultOpen={false}>
-            <DashboardSidebar />
-            <SidebarInset>{children}</SidebarInset>
-        </SidebarProvider>
+        <ChatProvider>
+            <SidebarProvider defaultOpen={false}>
+                <DashboardSidebar />
+                <SidebarInset>{children}</SidebarInset>
+            </SidebarProvider>
+        </ChatProvider>
     );
 }
