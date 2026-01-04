@@ -24,6 +24,7 @@
         },
         "enabled": true,
         "rules": {
+            "biomelint/correctness/noChildrenProp": "off",
             "recommended": true,
             "suspicious": {
                 "noUnknownAtRules": "off"

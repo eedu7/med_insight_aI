@@ -1,9 +1,31 @@
-export default function ScanPageView() {
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card";
+import { SelectImages } from "../components/select-images";
+import { SelectScanType } from "../components/select-scan-type";
+
+export const ScanPageView = () => {
     return (
-        <div className="w-full h-screen flex items-center justify-center">
-            <div className="font-medium hover:font-bold shadow p-8 hover:shadow-xl cursor-pointer transition-all hover:rounded-lg border-black outline-black hover:shadow-rose-100">
-                <h1 className="text-2xl font-mono">Scan Page View</h1>
+        <div className="w-full min-h-screen max-w-4xl mx-auto">
+            <div className="h-full w-full flex items-center justify-center">
+                <Card className="w-lg shadow-none border-none">
+                    <CardHeader className="text-center">
+                        <CardTitle>Medical Scan Analysis</CardTitle>
+                        <CardDescription>
+                            Upload an image and select the body part to begin AI
+                            diagnosis.
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-8">
+                        <SelectScanType />
+                        <SelectImages />
+                    </CardContent>
+                </Card>
             </div>
         </div>
     );
-}
+};

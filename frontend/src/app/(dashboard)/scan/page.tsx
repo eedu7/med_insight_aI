@@ -1,5 +1,5 @@
-import ScanViewPage from "@/features/scan/view/scan-page-view";
+import { ScanPageView } from "@/features/scan/view/scan-page-view";
 
 export default function Page() {
-    return <ScanViewPage />;
+    return <ScanPageView />;
 }
