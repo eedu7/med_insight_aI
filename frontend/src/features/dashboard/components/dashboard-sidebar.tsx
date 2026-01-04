@@ -12,6 +12,7 @@ import {
     LogOutIcon,
     PlusSquareIcon,
     ScanSearchIcon,
+    SparkleIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { DashboardSearch } from "./dashboard-search";
@@ -52,6 +53,16 @@ export const DashboardSidebar = () => {
                     <SidebarMenuItem>
                         <DashboardSearch />
                     </SidebarMenuItem>
+                    {/* Models */}
+                    <SidebarMenuItem>
+                        <SidebarMenuButton asChild>
+                            <Link href="/models">
+                                <SparkleIcon />
+                                Models
+                            </Link>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+
                 </SidebarMenu>
             </SidebarHeader>
 
