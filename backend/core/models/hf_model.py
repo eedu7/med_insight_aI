@@ -40,7 +40,7 @@ class HFModel(Base, PrimaryKeyMixin, TimestampMixin):
     revision: Mapped[str | None] = mapped_column(String(50), nullable=True)
 
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
-    is_experimental: Mapped[bool] = mapped_column(Boolean, default=True)
+    is_experimental: Mapped[bool] = mapped_column(Boolean, default=False)
 
     user_id: Mapped[UUID] = mapped_column(
         UUID(as_uuid=True), ForeignKey("users.id"), nullable=False
