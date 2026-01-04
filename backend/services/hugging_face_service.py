@@ -62,8 +62,8 @@ class HuggingFaceService:
             api_key=config.HF_TOKEN,
             provider="auto",
         )
-
-        max_tokens = min(config.HF_DEFAULT_MAX_TOKENS, config.HF_MAX_CONTEXT - 32)
+        # TODO: Update this in production
+        # max_tokens = min(config.HF_DEFAULT_MAX_TOKENS, config.HF_MAX_CONTEXT - 32)
 
         stream_content = client.chat.completions.create(
             model=model,

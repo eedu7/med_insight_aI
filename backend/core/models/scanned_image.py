@@ -16,6 +16,8 @@ class ScannedImage(Base, PrimaryKeyMixin, TimestampMixin):
     __tablename__ = "scanned_images"
 
     status: Mapped[str] = mapped_column(String(50), default="loading")
+
+    file_name: Mapped[str] = mapped_column(String(255))
     result: Mapped[str | None] = mapped_column(Text, nullable=True)
     url: Mapped[str] = mapped_column(Text, nullable=False)
 

@@ -28,6 +28,7 @@ class Config(BaseSettings):
     MINIO_SECRET_KEY: str = "minioadmin123"
     MINIO_BUCKET_NAME: str = "med-insight"
     MINIO_SECURE: bool = False
+    MINIO_BUCKET_NAME: str = "med-insight-ai"
 
     model_config = SettingsConfigDict(
         env_file=".env", env_file_encoding="utf-8", case_sensitive=True, extra="ignore"
