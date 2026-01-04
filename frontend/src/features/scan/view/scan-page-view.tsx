@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import {
-    Activity,
     AlertCircle,
     BrainCircuit,
     Loader2,
@@ -12,6 +11,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { DropZone, isFileDropItem } from "react-aria-components";
+import { ScanHeader } from "../components/scan-header";
 import { SelectImages } from "../components/select-images";
 import { SelectScanType } from "../components/select-scan-type";
 
@@ -82,18 +82,7 @@ export const ScanPageView = () => {
             className="w-full min-h-screen outline-none transition-colors data-drop-target:bg-emerald-500/5"
         >
             <div className="max-w-4xl mx-auto py-16 px-6 space-y-12">
-                <header className="space-y-4 text-center">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 text-[10px] font-bold uppercase tracking-[0.2em] mx-auto">
-                        <Activity className="h-3 w-3 animate-pulse" /> AI Diagnostic Interface
-                    </div>
-                    <h1 className="text-5xl font-extrabold tracking-tight">
-                        MedInsight AI<span className="text-muted-foreground font-light">Vision Scan</span>
-                    </h1>
-                    <p className="text-muted-foreground max-w-lg mx-auto text-sm leading-relaxed">
-                        Upload up to 6 high-resolution medical images. Our neural networks will cross-reference
-                        clinical benchmarks to provide diagnostic insights.
-                    </p>
-                </header>
+                <ScanHeader />
 
                 <div className="bg-card border border-border/60 rounded-[3rem] p-8 md:p-12 shadow-2xl shadow-emerald-500/5 relative overflow-hidden">
                     <BrainCircuit className="absolute -right-16 -top-16 h-80 w-80 opacity-[0.03] text-emerald-500 pointer-events-none" />
