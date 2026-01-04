@@ -1,6 +1,10 @@
 import { openai } from "@ai-sdk/openai";
 import { convertToModelMessages, streamText, type UIMessage } from "ai";
 
+type UserMetadata = {
+  selectedModel?: string;
+};
+
 export async function POST(req: Request) {
   const { messages }: { messages: UIMessage[] } = await req.json();
 
@@ -9,9 +13,9 @@ export async function POST(req: Request) {
   );
 
   const selectedModel =
-    lastUserMessage?.metadata?.selectedModel ?? "chatgpt-4o-latest";
+    (lastUserMessage?.metadata as UserMetadata | undefined)?.selectedModel ??
+    "chatgpt-4o-latest";
 
-  console.log("Selected Model:", selectedModel);
 
   const result = streamText({
     model: openai(selectedModel),
