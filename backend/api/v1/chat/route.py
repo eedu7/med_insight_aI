@@ -48,8 +48,12 @@ async def create_chat_message(
     user_id = request.state.user.id
 
     # Save User message
-    chat_id, _ = await chat_controller.create_chat_message(
-        role="user", user_id=user_id, content=data.content
+    await chat_controller.create_chat_message(
+        role="user",
+        user_id=user_id,
+        content=data.content,
+        chat_id=data.chat_id,
+        model_id=data.model_id,
     )
 
     async def stream_generator():
@@ -74,7 +78,7 @@ async def create_chat_message(
             model_id=data.model_id,
             user_id=user_id,
             content=content,
-            chat_id=chat_id,
+            chat_id=data.chat_id,
         )
 
     if stream:
@@ -89,5 +93,5 @@ async def create_chat_message(
         model_id=data.model_id,
         user_id=user_id,
         content=str(result),
-        chat_id=chat_id,
+        chat_id=data.chat_id,
     )

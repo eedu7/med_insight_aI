@@ -8,10 +8,10 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { useGetModels } from "@/features/models/hooks/use-models";
 import { Bot, Loader2, SendHorizontal, Settings2, Sparkles, User } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
-// Define message structure consistent with AI-SDK style
 type Message = {
     id: string;
     role: "user" | "assistant";
@@ -19,10 +19,11 @@ type Message = {
 };
 
 export default function ChatPageView() {
-    const [selectedModel, setSelectedModel] = useState("openai/gpt-oss-20b");
     const [input, setInput] = useState("");
     const [messages, setMessages] = useState<Message[]>([]);
     const [status, setStatus] = useState<"ready" | "streaming">("ready");
+    const { data: hfModels } = useGetModels()
+    const [selectedModel, setSelectedModel] = useState(hfModels?.[1]?.hfModelId || "");
 
     const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -35,12 +36,16 @@ export default function ChatPageView() {
         }
     }, [messages, status]);
 
+    const getModelIdByHFModelId = (hfModelId: string) => {
+        const model = hfModels?.find(m => m.hfModelId === hfModelId);
+        return model?.id;
+    }
+
     const handleSendMessage = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!input.trim() || status !== "ready") return;
 
         const userContent = input;
-        setInput("");
 
         const userMsg: Message = { id: Date.now().toString(), role: "user", content: userContent };
         const assistantMsgId = (Date.now() + 1).toString();
@@ -50,15 +55,22 @@ export default function ChatPageView() {
         setStatus("streaming");
 
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL!}/chat`, {
+            const response = await fetch("http://localhost:8000/api/v1/chat/message?stream=true", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiOTdjZDdiYmYtMWIzNi00OTc2LWEzODYtYmEyMDNjYmU3MGVjIiwiZW1haWwiOiJqb2huLmRvZUBleGFtcGxlLmNvbSIsImV4cCI6MTc2NzYyNzkwNCwidHlwZSI6ImFjY2VzcyJ9.L23t4w0UHvI0qAg0IXARozCiPEIK8b12yDgQ6PKU61M`
+                },
                 body: JSON.stringify({
-                    model: selectedModel,
-                    messages: updatedHistory.map(m => ({ role: m.role, content: m.content })),
-                    stream: true,
+                    "chat_id": crypto.randomUUID(),
+                    "model_name": selectedModel,
+                    "model_id": getModelIdByHFModelId(selectedModel),
+                    role: "user",
+                    content: userContent,
                 }),
             });
+            setInput("");
+
 
             if (!response.ok) throw new Error("Failed to connect to server");
 
@@ -114,9 +126,11 @@ export default function ChatPageView() {
                             <SelectValue placeholder="Select Model" />
                         </SelectTrigger>
                         <SelectContent className="rounded-xl shadow-2xl">
-                            <SelectItem value="openai/gpt-oss-20b" className="text-xs">openai/gpt-oss-20b</SelectItem>
-                            <SelectItem value="m42-health/Llama3-Med42-70B:featherless-ai" className="text-xs">m42-health/Llama3-Med42-70B:featherless-ai</SelectItem>
-                            <SelectItem value="Intelligent-Internet/II-Medical-8B:featherless-ai" className="text-xs">Intelligent-Internet/II-Medical-8B</SelectItem>
+                            {
+                                hfModels?.map((model) => (
+                                    <SelectItem key={model.id} value={model.hfModelId} className="text-xs">{model.displayName}</SelectItem>
+                                ))
+                            }
                         </SelectContent>
                     </Select>
                 </div>

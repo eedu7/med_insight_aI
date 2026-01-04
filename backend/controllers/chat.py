@@ -30,17 +30,18 @@ class ChatController:
         role: Literal["user", "assistant"],
         content: str,
         user_id: str,
+        chat_id: str,
         model_id: str | None = None,
-        chat_id: str | None = None,
     ):
-        if not chat_id:
-            title = random_chat_title()
-            chat = await self.create_chat(user_id, title)
-            chat_id = str(chat.id)
+        if chat_id:
+            chat = await self.chat_repository.get_chat_by_id(chat_id)
+            if not chat:
+                title = random_chat_title()
+                chat = await self.create_chat(user_id, title)
+                chat_id = str(chat.id)
         try:
-            chat_message = await self.chat_repository.create_chat_message(
+            return await self.chat_repository.create_chat_message(
                 {"role": role, "content": content, "chat_id": chat_id, "model_id": model_id}
             )
-            return chat_id, chat_message
         except Exception as e:
             raise BadRequestException(str(e))

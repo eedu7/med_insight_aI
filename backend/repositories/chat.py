@@ -11,6 +11,11 @@ class ChatRepository:
     def __init__(self, session: AsyncSession) -> None:
         self.session = session
 
+    async def get_chat_by_id(self, chat_id: str):
+        stmt = select(Chat).where(Chat.id == chat_id)
+        result = await self.session.execute(stmt)
+        return result.scalar_one_or_none()
+
     async def get_all_chats(self, skip: int = 0, limit: int = 20, user_id: str | None = None):
         stmt = select(Chat).options(selectinload(Chat.messages)).offset(skip).limit(limit)
         if user_id:

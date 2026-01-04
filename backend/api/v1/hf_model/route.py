@@ -3,11 +3,10 @@ from typing import Annotated, List
 from fastapi import APIRouter, Depends, Request, status
 
 from controllers.hf_model import HFModelController
-from core.dependencies import AuthenticationRequired
 from core.factory import factory
 from core.schemas.hf_model import HFModelCreate, HFModelRead
 
-router = APIRouter(dependencies=[Depends(AuthenticationRequired)])
+router = APIRouter()
 
 HFModelControllerDep = Annotated[HFModelController, Depends(factory.get_hf_model_controller)]
 
