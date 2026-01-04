@@ -99,10 +99,11 @@ export const SelectImages = ({
             <ModalOverlay
                 isOpen={!!zoomImage}
                 onOpenChange={() => setZoomImage(null)}
+                isDismissable // <--- ADD THIS
                 className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
             >
                 <Modal className="max-w-4xl w-full max-h-[90vh] outline-none">
-                    <Dialog className="relative outline-none">
+                    <Dialog className="relative outline-none flex items-center justify-center">
                         {({ close }) => (
                             <>
                                 <Heading slot="title" className="sr-only">
@@ -119,6 +120,7 @@ export const SelectImages = ({
                                 <img
                                     src={zoomImage?.url}
                                     alt={zoomImage?.name}
+                                    onClick={(e) => e.stopPropagation()}
                                     className="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl"
                                 />
                             </>
