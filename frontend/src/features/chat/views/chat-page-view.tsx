@@ -20,11 +20,7 @@ export default function ChatPageView() {
     const { messages, sendMessage, status } = useChat({
         transport: new DefaultChatTransport({
             api: "/api/chat",
-            body: {
-                selectedModel: selectedModel
-            },
         }),
-        // This 'body' is sent with every request to the server
     });
 
     const isLoading = status === "streaming" || status === "submitted";
@@ -52,6 +48,7 @@ export default function ChatPageView() {
                             <SelectItem value="gpt-4o-mini" className="text-xs">GPT-4o Mini (Fast)</SelectItem>
                             <SelectItem value="o1-preview" className="text-xs">o1-Preview (Reasoning)</SelectItem>
                             <SelectItem value="gpt-5-mini" className="text-xs">gpt-5-mini</SelectItem>
+                            <SelectItem value="gpt-5.2-chat-latest" className="text-xs">gpt-5.2-chat-latest</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
@@ -79,7 +76,10 @@ export default function ChatPageView() {
                     onSubmit={(e) => {
                         e.preventDefault();
                         if (input.trim() && status === 'ready') {
-                            sendMessage({ text: input });
+                            sendMessage({
+                                metadata: { selectedModel },
+                                text: input,
+                            });
                             setInput('');
                         }
                     }}
