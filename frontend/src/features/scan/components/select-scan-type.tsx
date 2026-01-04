@@ -21,11 +21,8 @@ export const SelectScanType = ({ value, onValueChange }: SelectScanTypeProps) =>
                     <SelectValue placeholder="Identify Scan Category or Organ" />
                 </SelectTrigger>
                 <SelectContent className="rounded-2xl border-border shadow-2xl p-2">
-                    <SelectItem value="Skin" className="rounded-lg py-3 cursor-pointer">Dermatological (Skin)</SelectItem>
-                    <SelectItem value="Brain" className="rounded-lg py-3 cursor-pointer">Neurological (Brain)</SelectItem>
-                    <SelectItem value="Lung" className="rounded-lg py-3 cursor-pointer">Pulmonary (Lung)</SelectItem>
-                    <SelectItem value="Heart" className="rounded-lg py-3 cursor-pointer">Cardiological (Heart)</SelectItem>
-                    <SelectItem value="Abdomen" className="rounded-lg py-3 cursor-pointer">Gastrointestinal (Abdomen)</SelectItem>
+
+                    <SelectItem value="prithivMLmods/open-age-detection" className="rounded-lg py-3 cursor-pointer">prithivMLmods/open-age-detection</SelectItem>
                 </SelectContent>
             </Select>
         </div>

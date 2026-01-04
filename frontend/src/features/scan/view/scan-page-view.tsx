@@ -14,6 +14,7 @@ import { DropZone, isFileDropItem } from "react-aria-components";
 import { ScanHeader } from "../components/scan-header";
 import { SelectImages } from "../components/select-images";
 import { SelectScanType } from "../components/select-scan-type";
+import { useCreateScan } from "../hooks/use-scans";
 
 interface ImageItem {
     id: string;
@@ -24,8 +25,9 @@ interface ImageItem {
 
 export const ScanPageView = () => {
     const [items, setItems] = useState<ImageItem[]>([]);
-    const [scanType, setScanType] = useState<string>("Skin");
-    const [isUploading, setIsUploading] = useState(false);
+    const [scanModel, setScanModel] = useState<string>("prithivMLmods/open-age-detection");
+
+    const createScanMutation = useCreateScan();
 
     const processFiles = (files: File[]) => {
         const newFiles: ImageItem[] = files.map((file) => ({
@@ -46,29 +48,14 @@ export const ScanPageView = () => {
         });
     };
 
-    const handleAnalyze = async () => {
-        if (items.length === 0 || !scanType) return;
-        setIsUploading(true);
+    const handleAnalyze = () => {
+        if (items.length === 0 || !scanModel) return;
 
-        try {
-            const formData = new FormData();
-            formData.append("scanType", scanType);
-            items.forEach((item) => formData.append("files", item.file));
+        const formData = new FormData();
+        formData.append("model", scanModel);
+        items.forEach((item) => formData.append("files", item.file));
 
-            const response = await fetch("/api/scan", {
-                method: "POST",
-                body: formData,
-            });
-
-            if (!response.ok) throw new Error("Analysis failed");
-            const result = await response.json();
-            console.log("Analysis Result:", result);
-            alert("Analysis Complete. Check console.");
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setIsUploading(false);
-        }
+        createScanMutation.mutate(formData);
     };
 
     return (
@@ -92,7 +79,7 @@ export const ScanPageView = () => {
                             <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600/70">
                                 <Sparkles className="h-4 w-4" /> Protocol Selection
                             </div>
-                            <SelectScanType value={scanType} onValueChange={setScanType} />
+                            <SelectScanType value={scanModel} onValueChange={setScanModel} />
                         </section>
 
                         <section className="space-y-6">
@@ -109,10 +96,10 @@ export const ScanPageView = () => {
                         <div className="space-y-4">
                             <Button
                                 className="w-full h-16 rounded-[1.5rem] text-lg font-bold bg-foreground hover:bg-emerald-600 text-background transition-all shadow-xl active:scale-[0.98] disabled:opacity-30 group"
-                                disabled={isUploading || items.length === 0 || !scanType}
+                                disabled={createScanMutation.isPending || items.length === 0 || !scanModel}
                                 onClick={handleAnalyze}
                             >
-                                {isUploading ? (
+                                {createScanMutation.isPending ? (
                                     <>
                                         <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                                         Neural Processing...
@@ -124,7 +111,7 @@ export const ScanPageView = () => {
                                 )}
                             </Button>
 
-                            {!scanType && items.length > 0 && (
+                            {!scanModel && items.length > 0 && (
                                 <div className="flex items-center justify-center gap-2 text-amber-500 text-[10px] font-bold uppercase tracking-widest animate-in fade-in slide-in-from-bottom-1">
                                     <AlertCircle className="h-3 w-3" /> Select scan category to enable analysis
                                 </div>

@@ -1,12 +1,13 @@
 from typing import Annotated, List
+from uuid import UUID
 
-from asyncpg.pgproto.pgproto import UUID
-from fastapi import APIRouter, BackgroundTasks, Depends, File, Form, Request, UploadFile
+from fastapi import APIRouter, BackgroundTasks, Depends, File, Form, Request, UploadFile, status
 
 from controllers import ScanController
 from core.dependencies import AuthenticationRequired, HuggingFaceServiceDep, MinioDep
 from core.exceptions import BadRequestException
 from core.factory import factory
+from core.schemas.scan import ScanRead
 from core.utils import process_image
 
 router = APIRouter(dependencies=[Depends(AuthenticationRequired)])
@@ -14,7 +15,7 @@ router = APIRouter(dependencies=[Depends(AuthenticationRequired)])
 ScanControllerDep = Annotated[ScanController, Depends(factory.get_scan_controller)]
 
 
-@router.get("/")
+@router.get("/", response_model=List[ScanRead])
 async def get_all_scans(
     request: Request,
     scan_controller: ScanControllerDep,
@@ -26,7 +27,7 @@ async def get_all_scans(
     )
 
 
-@router.get("/{scan_id}")
+@router.get("/{scan_id}", response_model=ScanRead)
 async def get_scan_by_id(
     scan_id: UUID,
     request: Request,
@@ -35,7 +36,7 @@ async def get_scan_by_id(
     return await scan_controller.get_scan_by_id(scan_id=str(scan_id), user_id=request.state.user.id)
 
 
-@router.post("/")
+@router.post("/", status_code=status.HTTP_201_CREATED)
 async def scan(
     request: Request,
     background_tasks: BackgroundTasks,
@@ -64,53 +65,3 @@ async def scan(
         )
 
     return scan
-
-
-# @router.post("/")
-# async def scan(
-#     request: Request,
-#     background_tasks: BackgroundTasks,
-#     hf_service: HuggingFaceServiceDep,
-#     scan_controller: ScanControllerDep,
-#     minio: MinioDep,
-#     model: str = Form(...),
-#     files: List[UploadFile] = File(...),
-# ):
-#     if not files:
-#         raise BadRequestException("No files uploaded")
-#     results = []
-#     try:
-#         for file in files:
-#             content = await file.read()
-
-#             if not file.content_type:
-#                 raise ValueError("")
-
-#             hf_result = hf_service.scan(
-#                 image_bytes=content, model=model, content_type=file.content_type
-#             )
-
-#             filename = f"{uuid4()}-{file.filename}"
-
-#             minio.upload_image(filename, content, file.content_type)
-
-#             signed_url = minio.get_signed_url(filename)
-
-#             results.append(
-#                 {
-#                     "filename": file.filename,
-#                     "content_type": file.content_type,
-#                     "size": len(content),
-#                     "signed_url": signed_url,
-#                     "hf_result": hf_result,
-#                 }
-#             )
-#         return {
-#             "status": "success",
-#             "model": model,
-#             "file_processed": results,
-#             "diagnosis": "This is a placeholder diagnosis from FastAPI",
-#         }
-#     except Exception as e:
-#         print(f"Error: {e}")
-#         raise BadRequestException(str(e))
