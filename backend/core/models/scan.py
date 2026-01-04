@@ -9,18 +9,23 @@ from core.database import Base
 from core.database.mixins import PrimaryKeyMixin, TimestampMixin
 
 if TYPE_CHECKING:
-    from .chat_message import ChatMessage
+    from .scanned_image import ScannedImage
 
 
-class Chat(Base, PrimaryKeyMixin, TimestampMixin):
-    __tablename__ = "chats"
+class Scan(Base, PrimaryKeyMixin, TimestampMixin):
+    __tablename__ = "scans"
 
     user_id: Mapped[UUID] = mapped_column(
-        UUID(as_uuid=True), ForeignKey("users.id"), nullable=False
+        UUID(as_uuid=True),
+        ForeignKey("users.id"),
+        nullable=False,
     )
 
     title: Mapped[str] = mapped_column(String(50))
 
-    messages: Mapped[List["ChatMessage"]] = relationship(
-        "ChatMessage", back_populates="chat", cascade="all, delete-orphan", passive_deletes=True
+    scanned_images: Mapped[List["ScannedImage"]] = relationship(
+        "ScannedImage",
+        back_populates="scan",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
     )

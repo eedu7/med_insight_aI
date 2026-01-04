@@ -15,7 +15,6 @@ if TYPE_CHECKING:
 class ChatMessage(Base, PrimaryKeyMixin, TimestampMixin):
     __tablename__ = "chat_message"
 
-    status: Mapped[str] = mapped_column(String(50), default="loading")
     role: Mapped[str] = mapped_column(String(50), default="user")
 
     content: Mapped[str] = mapped_column(Text)
@@ -23,6 +22,8 @@ class ChatMessage(Base, PrimaryKeyMixin, TimestampMixin):
     model_id: Mapped[UUID] = mapped_column(
         UUID(as_uuid=True), ForeignKey("hf_models.id"), nullable=True
     )
-    chat_id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("chats.id"))
+    chat_id: Mapped[UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("chats.id", ondelete="CASCADE")
+    )
 
     chat: Mapped["Chat"] = relationship("Chat", back_populates="messages")
