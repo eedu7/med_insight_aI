@@ -29,6 +29,5 @@ async def process_image(
         )
         # TODO: Update the "ScannedImage" status
 
-        print("Results:", hf_result)
     except Exception as e:
         print(f"Failed processing {file.filename}: {e}")
