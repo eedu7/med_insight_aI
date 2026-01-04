@@ -1,5 +1,6 @@
 from typing import Annotated, List
 
+from asyncpg.pgproto.pgproto import UUID
 from fastapi import APIRouter, BackgroundTasks, Depends, File, Form, Request, UploadFile
 
 from controllers import ScanController
@@ -11,6 +12,27 @@ from core.utils import process_image
 router = APIRouter(dependencies=[Depends(AuthenticationRequired)])
 
 ScanControllerDep = Annotated[ScanController, Depends(factory.get_scan_controller)]
+
+
+@router.get("/")
+async def get_all_scans(
+    request: Request,
+    scan_controller: ScanControllerDep,
+    skip: int = 0,
+    limit: int = 20,
+):
+    return await scan_controller.get_all_scans(
+        skip=skip, limit=limit, user_id=request.state.user.id
+    )
+
+
+@router.get("/{scan_id}")
+async def get_scan_by_id(
+    scan_id: UUID,
+    request: Request,
+    scan_controller: ScanControllerDep,
+):
+    return await scan_controller.get_scan_by_id(scan_id=str(scan_id), user_id=request.state.user.id)
 
 
 @router.post("/")
