@@ -1,24 +1,20 @@
-from typing import List
-
 from fastapi import APIRouter
-from pydantic import BaseModel
+from fastapi.responses import StreamingResponse
 
 from core.dependencies import HuggingFaceServiceDep
+from core.utils.chat import ChatCreate
 
 router = APIRouter()
 
 
-class Message(BaseModel):
-    role: str = "user"
-    content: str
-
-
-class ChatRequest(BaseModel):
-    model: str
-    messages: List[Message]
-
-
 @router.post("/")
-async def chat(data: ChatRequest, hf_service: HuggingFaceServiceDep):
+async def chat(data: ChatCreate, hf_service: HuggingFaceServiceDep):
     messages = data.model_dump()
-    return hf_service.text_generation(messages=messages["messages"], model=messages["model"])
+    if data.stream:
+        generator = hf_service.text_generation(
+            messages=messages["messages"], model=messages["model"], stream=True
+        )
+        return StreamingResponse(generator, media_type="text/event-stream")  # type: ignore
+    return hf_service.text_generation(
+        messages=messages["messages"], model=messages["model"], stream=False
+    )

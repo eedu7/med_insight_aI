@@ -4,6 +4,8 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Config(BaseSettings):
     # HuggingFace
     HF_TOKEN: str = ""
+    HF_MAX_CONTEXT: int = 2048
+    HF_DEFAULT_MAX_TOKENS: int = 512
 
     # JWT
     JWT_SECRET: str = ""

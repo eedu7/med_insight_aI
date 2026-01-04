@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from typing import Any, Dict
 
 from huggingface_hub import InferenceClient
@@ -37,7 +38,6 @@ class HuggingFaceService:
 
     def token_classification(self, text: str, model: str) -> Dict[str, Any]:
         client = InferenceClient(
-            provider="hf-inference",
             api_key=config.HF_TOKEN,
         )
         result = client.token_classification(text=text, model=model, aggregation_strategy="simple")
@@ -55,16 +55,25 @@ class HuggingFaceService:
 
         return {"type": "token_classification", "model": model, "entities": entities, "raw": result}
 
-    def text_generation(self, messages: Dict[str, Any], model: str):
+    def text_generation(
+        self, messages: Dict[str, Any], model: str, stream: bool
+    ) -> Generator[bytes | None | None] | str:
         client = InferenceClient(
             api_key=config.HF_TOKEN,
+            provider="auto",
         )
 
-        stream = client.chat.completions.create(model=model, messages=messages, stream=True)  # type: ignore
-        full_response = []
-        for chunk in stream:
-            res = chunk.choices[0].delta.content
-            full_response.append(res)
-            print(res, end="")
+        max_tokens = min(config.HF_DEFAULT_MAX_TOKENS, config.HF_MAX_CONTEXT - 32)
 
-        return {"full_response": full_response}
+        stream_content = client.chat.completions.create(
+            model=model,
+            messages=messages,  # type: ignore
+            stream=True,
+            max_tokens=max_tokens,  # type: ignore
+        )
+        if stream:
+            for chunk in stream_content:
+                res = chunk.choices[0].delta.content
+                if res:
+                    yield res.encode("utf-8")
+        return stream_content
