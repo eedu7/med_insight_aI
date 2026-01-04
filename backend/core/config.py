@@ -2,6 +2,9 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Config(BaseSettings):
+    # HuggingFace
+    HF_TOKEN: str = ""
+
     # JWT
     JWT_SECRET: str = ""
     JWT_ALGORITHM: str = ""

@@ -9,6 +9,7 @@ dependencies = [
     "asyncpg>=0.31.0",
     "bcrypt>=5.0.0",
     "fastapi[standard]>=0.128.0",
+    "huggingface-hub>=1.2.3",
     "psycopg2>=2.9.11",
     "pydantic>=2.12.5",
     "pydantic-settings>=2.12.0",
