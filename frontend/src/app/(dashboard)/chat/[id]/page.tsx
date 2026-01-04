@@ -1,4 +1,4 @@
-import { ChatMessagePageView } from "@/features/chat/views/chat-messages-page-view"
+import { ChatMessagesPageView } from "@/features/chat/views/ChatMessagesPageView"
 
 interface Props {
     params: Promise<{ id: string }>
@@ -7,6 +7,6 @@ interface Props {
 export default async function Page({ params }: Props) {
     const { id } = await params
     return (
-        <ChatMessagePageView chatId={id} />
+        <ChatMessagesPageView chatId={id} />
     )
 }

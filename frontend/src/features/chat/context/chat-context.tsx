@@ -7,6 +7,8 @@ interface ChatContextType {
     setPendingMessage: (msg: string) => void;
     selectedModel: string;
     setSelectedModel: (model: string) => void;
+    isFirstMessage: boolean;
+    setIsFirstMessage: (val: boolean) => void;
 }
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
@@ -14,13 +16,16 @@ const ChatContext = createContext<ChatContextType | undefined>(undefined);
 export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
     const [pendingMessage, setPendingMessage] = useState("");
     const [selectedModel, setSelectedModel] = useState("");
+    const [isFirstMessage, setIsFirstMessage] = useState(false);
 
     return (
         <ChatContext.Provider value={{
             pendingMessage,
             setPendingMessage,
             selectedModel,
-            setSelectedModel
+            setSelectedModel,
+            isFirstMessage,
+            setIsFirstMessage
         }}>
             {children}
         </ChatContext.Provider>

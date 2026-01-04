@@ -1,28 +1,26 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 
-
-interface CreateChatProps {
+interface CreateChatRead {
+    id: string;
     title: string;
 }
 
 export const useCreateChat = () => {
     return useMutation({
         mutationKey: ["create-chat"],
-        mutationFn: async (data: CreateChatProps) => {
+        mutationFn: async () => {
             const res = await fetch(
-                `${process.env.NEXT_PUBLIC_API_URL}/chats`,
+                `${process.env.NEXT_PUBLIC_BASE_API_URL}/chat`,
                 {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
+                        "Authorization": `Bearer ${process.env.NEXT_PUBLIC_TOKEN}`,
                     },
-                    body: JSON.stringify({
-                        "title": data.title
-                    }),
                 }
             );
-            return res.json();
-        }
+            return res.json() as Promise<CreateChatRead>;
+        },
     })
 }
 
