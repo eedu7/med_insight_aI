@@ -1,5 +1,6 @@
 from .chat import ChatRepository
 from .hf_model import HFModelRepository
+from .scan import ScanRepository
 from .user import UserRepository
 
-__all__ = ["HFModelRepository", "UserRepository", "ChatRepository"]
+__all__ = ["HFModelRepository", "UserRepository", "ChatRepository", "ScanRepository"]

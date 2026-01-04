@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, List
 
-from sqlalchemy import UUID, ForeignKey, String
+from sqlalchemy import UUID, ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from core.database import Base
@@ -20,7 +20,7 @@ class Scan(Base, PrimaryKeyMixin, TimestampMixin):
         ForeignKey("users.id"),
         nullable=False,
     )
-
+    number_of_images: Mapped[int] = mapped_column(Integer, default=1)
     title: Mapped[str] = mapped_column(String(50))
 
     scanned_images: Mapped[List["ScannedImage"]] = relationship(

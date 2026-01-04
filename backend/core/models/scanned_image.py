@@ -19,7 +19,6 @@ class ScannedImage(Base, PrimaryKeyMixin, TimestampMixin):
 
     file_name: Mapped[str] = mapped_column(String(255))
     result: Mapped[str | None] = mapped_column(Text, nullable=True)
-    url: Mapped[str] = mapped_column(Text, nullable=False)
 
     scan_id: Mapped[UUID] = mapped_column(
         UUID(as_uuid=True),
