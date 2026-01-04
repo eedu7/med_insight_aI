@@ -20,7 +20,9 @@ class ChatMessage(Base, PrimaryKeyMixin, TimestampMixin):
 
     content: Mapped[str] = mapped_column(Text)
 
-    model_id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("hf_models.id"))
+    model_id: Mapped[UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("hf_models.id"), nullable=True
+    )
     chat_id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("chats.id"))
 
     chat: Mapped["Chat"] = relationship("Chat", back_populates="messages")
