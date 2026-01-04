@@ -18,7 +18,7 @@ import {
     SearchIcon,
 } from "lucide-react";
 import Link from "next/link";
-import * as React from "react";
+import { useEffect, useState } from "react";
 
 const RECENT_SEARCHES = [
     {
@@ -48,9 +48,16 @@ const RECENT_SEARCHES = [
 ];
 
 export const DashboardSearch = () => {
-    const [query, setQuery] = React.useState("");
-    const [open, setOpen] = React.useState(false);
+    const [mounted, setMounted] = useState(false);
+    const [query, setQuery] = useState("");
+    const [open, setOpen] = useState(false);
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
+    if (!mounted) {
+        return null;
+    }
     const filtered = RECENT_SEARCHES.filter((item) =>
         item.title.toLowerCase().includes(query.toLowerCase()),
     );

@@ -2,10 +2,10 @@ import { openai } from "@ai-sdk/openai";
 import { convertToModelMessages, streamText, type UIMessage } from "ai";
 
 export async function POST(req: Request) {
-    const { messages }: { messages: UIMessage[] } = await req.json();
-
+    const { messages, selectedModel }: { messages: UIMessage[], selectedModel?: string } = await req.json();
+    console.log("Selected Model:", selectedModel);
     const result = streamText({
-        model: openai("chatgpt-4o-latest"),
+        model: openai(selectedModel || "chatgpt-4o-latest"),
         messages: await convertToModelMessages(messages),
     });
 
