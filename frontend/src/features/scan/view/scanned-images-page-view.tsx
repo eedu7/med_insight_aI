@@ -10,15 +10,19 @@ import {
     Fingerprint,
     ImageIcon,
     Loader2,
+    Maximize2,
     ShieldCheck,
-    Target
+    Target,
+    X
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 import { useGetScanByID } from "../hooks/use-scans";
 
 export const ScannedImagesPageView = ({ scanId }: { scanId: string }) => {
     const { data: scan, isLoading, isError } = useGetScanByID(scanId);
+    const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
     const getCleanFileName = (url: string) => {
         try {
@@ -54,8 +58,6 @@ export const ScannedImagesPageView = ({ scanId }: { scanId: string }) => {
     return (
         <div className="min-h-screen bg-background p-6 lg:p-12">
             <div className="max-w-6xl mx-auto space-y-10">
-
-                {/* Header */}
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                     <div className="space-y-4">
                         <Button variant="ghost" size="sm" className="rounded-full gap-2 text-muted-foreground hover:text-emerald-500 hover:bg-emerald-500/5" asChild>
@@ -73,7 +75,6 @@ export const ScannedImagesPageView = ({ scanId }: { scanId: string }) => {
                     </Badge>
                 </div>
 
-                {/* Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     {Array.from({ length: scan.number_of_images }).map((_, index) => {
                         const imageData = scan.scanned_images[index];
@@ -99,7 +100,10 @@ export const ScannedImagesPageView = ({ scanId }: { scanId: string }) => {
                                             </Badge>
                                         </div>
 
-                                        <div className="relative aspect-video w-full rounded-2xl bg-black border border-border/40 overflow-hidden group/img">
+                                        <div
+                                            className="relative aspect-video w-full rounded-2xl bg-black border border-border/40 overflow-hidden group/img cursor-zoom-in"
+                                            onClick={() => setSelectedImage(imageData.file_name)}
+                                        >
                                             <Image
                                                 src={imageData.file_name}
                                                 alt="Medical Scan"
@@ -107,7 +111,9 @@ export const ScannedImagesPageView = ({ scanId }: { scanId: string }) => {
                                                 unoptimized
                                                 className="object-cover opacity-90 group-hover/img:opacity-100 transition-opacity duration-500"
                                             />
-                                            {/* Technical Grid Overlay */}
+                                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center">
+                                                <Maximize2 className="text-white h-8 w-8" />
+                                            </div>
                                             <div className="absolute inset-0 pointer-events-none border-[0.5px] border-emerald-500/20">
                                                 <div className="w-full h-[1px] bg-emerald-500/10 absolute top-1/2 -translate-y-1/2" />
                                                 <div className="w-[1px] h-full bg-emerald-500/10 absolute left-1/2 -translate-x-1/2" />
@@ -175,6 +181,32 @@ export const ScannedImagesPageView = ({ scanId }: { scanId: string }) => {
                     })}
                 </div>
             </div>
+
+            {selectedImage && (
+                <div
+                    className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 backdrop-blur-md animate-in fade-in duration-300 p-4 md:p-10"
+                    onClick={() => setSelectedImage(null)}
+                >
+                    <button
+                        className="absolute top-6 right-6 text-white/50 hover:text-white transition-colors z-[110]"
+                        onClick={() => setSelectedImage(null)}
+                    >
+                        <X className="h-10 w-10" />
+                    </button>
+
+                    <div className="relative w-full h-full flex items-center justify-center">
+                        <div className="relative w-full h-full max-w-5xl max-h-[85vh]">
+                            <Image
+                                src={selectedImage}
+                                alt="High Resolution Scan"
+                                fill
+                                className="object-contain"
+                                unoptimized
+                            />
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
