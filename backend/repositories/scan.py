@@ -17,6 +17,11 @@ class ScanRepository:
         result = await self.session.execute(stmt)
         return result.scalar_one_or_none()
 
+    async def get_scanned_image_by_id(self, id: str):
+        stmt = select(ScannedImage).where(ScannedImage.id == id)
+        result = await self.session.execute(stmt)
+        return result.scalar_one_or_none()
+
     async def get_all_scans(
         self,
         user_id: str | None = None,
@@ -43,3 +48,12 @@ class ScanRepository:
         await self.session.commit()
         await self.session.refresh(scanned_image)
         return scanned_image
+
+    async def update_scanned_image(self, obj: ScannedImage, attributes: Dict):
+        for key, value in attributes.items():
+            if hasattr(obj, key):
+                setattr(obj, key, value)
+        await self.session.commit()
+        await self.session.refresh(obj)
+        print("Updated")
+        return obj

@@ -1,4 +1,6 @@
-from core.exceptions import BadRequestException
+from typing import Dict
+
+from core.exceptions import BadRequestException, NotFoundException
 from core.utils import random_chat_title
 from repositories import ScanRepository
 from services import MinioService
@@ -48,3 +50,13 @@ class ScanController:
             )
         except Exception as e:
             raise BadRequestException(str(e))
+
+    async def update_scanned_image(self, scanned_image_id: str, attributes: Dict):
+        scanned_image = await self.scan_repository.get_scanned_image_by_id(
+            id=scanned_image_id,
+        )
+
+        if not scanned_image:
+            raise NotFoundException("No Scanned Image found")
+
+        await self.scan_repository.update_scanned_image(scanned_image, attributes)

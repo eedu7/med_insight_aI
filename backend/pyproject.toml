@@ -12,6 +12,7 @@ dependencies = [
     "huggingface-hub[mcp,torch]>=1.2.3",
     "huggingface[mcp,torch]>=0.0.1",
     "minio>=7.2.20",
+    "openai>=2.14.0",
     "pillow>=12.1.0",
     "polar-sdk>=0.28.1",
     "psycopg2>=2.9.11",
