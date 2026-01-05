@@ -31,3 +31,12 @@ class UserRepository:
         await self.session.commit()
         await self.session.refresh(user)
         return user
+
+    async def update(self, user: User, attributes: Dict) -> User:
+        for key, value in attributes.items():
+            if hasattr(user, key):
+                setattr(user, key, value)
+
+        await self.session.commit()
+        await self.session.refresh(user)
+        return user

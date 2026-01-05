@@ -19,9 +19,7 @@ class AuthController:
         self.user_repository = user_repository
         self.polar = polar
 
-    async def register(
-        self, email: EmailStr, password: str, username: str
-    ) -> AuthRead:
+    async def register(self, email: EmailStr, password: str, username: str) -> AuthRead:
         """Register a new user and return authentication tokens."""
         if await self.user_repository.get_by_email(email=email):
             raise BadRequestException("A user with this email already exists.")
@@ -43,7 +41,7 @@ class AuthController:
             name=user.username, user_id=str(user.id), email=user.email
         )
 
-        # TODO: User Polar ID
+        await self.user_repository.update(user, {"polar_customer_id": customer.id})
 
         token = self._get_token(user)
 
