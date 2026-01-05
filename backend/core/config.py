@@ -35,6 +35,8 @@ class Config(BaseSettings):
     POLAR_SERVER: str = "sandbox"
     POLAR_PRODUCT_ID: str = ""
     POLAR_PRODUCT_SLUG: str = ""
+    POLAR_ORGANIZATION_ID: str = ""
+    POLAR_ORGANIZATION_SLUG: str = ""
 
     model_config = SettingsConfigDict(
         env_file=".env", env_file_encoding="utf-8", case_sensitive=True, extra="ignore"

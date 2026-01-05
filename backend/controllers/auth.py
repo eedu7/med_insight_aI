@@ -7,13 +7,21 @@ from core.schemas.token import Token
 from core.schemas.user import UserRead
 from core.utils import JWTManager, PasswordManager
 from repositories.user import UserRepository
+from services import PolarService
 
 
 class AuthController:
-    def __init__(self, user_repository: UserRepository) -> None:
+    def __init__(
+        self,
+        user_repository: UserRepository,
+        polar: PolarService,
+    ) -> None:
         self.user_repository = user_repository
+        self.polar = polar
 
-    async def register(self, email: EmailStr, password: str, username: str) -> AuthRead:
+    async def register(
+        self, email: EmailStr, password: str, username: str
+    ) -> AuthRead:
         """Register a new user and return authentication tokens."""
         if await self.user_repository.get_by_email(email=email):
             raise BadRequestException("A user with this email already exists.")
@@ -24,8 +32,18 @@ class AuthController:
         hashed_password = PasswordManager.hash(password)
 
         user = await self.user_repository.create(
-            {"email": email, "password": hashed_password, "username": username}
+            {
+                "email": email,
+                "password": hashed_password,
+                "username": username,
+            }
         )
+
+        customer = self.polar.register_customer(
+            name=user.username, user_id=str(user.id), email=user.email
+        )
+
+        # TODO: User Polar ID
 
         token = self._get_token(user)
 

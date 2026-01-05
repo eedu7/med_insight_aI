@@ -10,6 +10,15 @@ class PolarService:
             access_token=config.POLAR_ACCESS_TOKEN,
         )
 
+    def register_customer(self, *, email: str, user_id: str, name: str):
+        return self.client.customers.create(
+            customer_create={
+                "email": email,
+                "external_id": user_id,
+                "name": name,
+            }
+        )
+
 
 _polar_service: PolarService | None = None
 

@@ -14,6 +14,7 @@ from repositories import (
     ScanRepository,
     UserRepository,
 )
+from services import get_polar_service
 
 
 class Factory:
@@ -37,8 +38,9 @@ class Factory:
         return OrderRepository(session=session)
 
     def get_auth_controller(self, session: SessionDep) -> AuthController:
+        polar = get_polar_service()
         repo = self.get_user_repository(session)
-        return AuthController(repo)
+        return AuthController(repo, polar)
 
     def get_user_controller(self, session: SessionDep) -> UserController:
         repo = self.get_user_repository(session)
