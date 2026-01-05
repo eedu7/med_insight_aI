@@ -56,7 +56,6 @@ export const ChatMessagesPageView = ({ chatId }: { chatId: string }) => {
                     content,
                 }),
             });
-            console.log("Response:", await response.json())
 
             if (!response.ok) throw new Error();
             const reader = response.body?.getReader();
