@@ -67,7 +67,7 @@ interface ScannedImage {
     id: string;
     status: string;
     file_name: string;
-    results?: string;
+    result?: string;
 }
 
 interface ScanWithScannedImages {
@@ -76,7 +76,6 @@ interface ScanWithScannedImages {
     number_of_images: number;
     scanned_images: ScannedImage[];
 }
-
 
 export const useGetScanByID = (id: string) => {
     const accessToken = getCookie("accessToken");
@@ -92,13 +91,20 @@ export const useGetScanByID = (id: string) => {
                 }
             });
 
-            if (!res.ok) {
-                toast.error("Error in creating scan")
-                throw new Error("Error in creating a scan")
-            }
-
+            if (!res.ok) throw new Error("Failed to fetch scan details");
             return res.json() as Promise<ScanWithScannedImages>;
         },
-        enabled: !!id
-    })
-}
+        enabled: !!id,
+        refetchInterval: (query) => {
+            const data = query.state.data as ScanWithScannedImages | undefined;
+            if (!data) return 1000;
+
+            const isFinished =
+                data.scanned_images.length === data.number_of_images &&
+                data.scanned_images.every(img => img.status === "complete" || img.status === "failed");
+
+            return isFinished ? false : 1000;
+        },
+        refetchIntervalInBackground: true,
+    });
+};
