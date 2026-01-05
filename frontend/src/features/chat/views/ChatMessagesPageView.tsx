@@ -20,7 +20,6 @@ export const ChatMessagesPageView = ({ chatId }: { chatId: string }) => {
 
     const { data: chats } = useGetChatById(chatId);
 
-    // const { data: hfModels } = useGetModels();
     const [input, setInput] = useState("");
     const [messages, setMessages] = useState<{ id: string, role: "user" | "assistant", content: string }[]>([]);
     const [status, setStatus] = useState<"ready" | "streaming">("ready");
@@ -28,9 +27,8 @@ export const ChatMessagesPageView = ({ chatId }: { chatId: string }) => {
     const scrollRef = useRef<HTMLDivElement>(null);
     const hasFired = useRef(false);
 
-
     useEffect(() => {
-        if (chats?.messages && chats.messages.length === 0) {
+        if (!isFirstMessage && chats?.messages) {
             const formattedMessages = chats.messages.map((m) => ({
                 id: m.id,
                 role: m.role as "user" | "assistant",
@@ -38,9 +36,7 @@ export const ChatMessagesPageView = ({ chatId }: { chatId: string }) => {
             }));
             setMessages(formattedMessages);
         }
-    }, [chats, messages.length])
-
-    // const getModelId = (hfId: string) => hfModels?.find(m => m.hfModelId === hfId)?.id;
+    }, [chats, isFirstMessage]);
 
     const processMessage = useCallback(async (content: string) => {
         if (!content.trim() || status !== "ready" || !selectedModel) return;
@@ -53,11 +49,10 @@ export const ChatMessagesPageView = ({ chatId }: { chatId: string }) => {
         ]);
 
         setStatus("streaming");
-
         const accessToken = getCookie("accessToken");
 
         try {
-            const response = await fetch("http://localhost:8000/api/v1/chat/message?stream=true", {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}/chat/message?stream=true`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -82,25 +77,33 @@ export const ChatMessagesPageView = ({ chatId }: { chatId: string }) => {
                     const { done, value } = await reader.read();
                     if (done) break;
                     accumulated += decoder.decode(value, { stream: true });
-                    setMessages(prev => prev.map(m => m.id === assistantMsgId ? { ...m, content: accumulated } : m));
+                    setMessages(prev => prev.map(m =>
+                        m.id === assistantMsgId ? { ...m, content: accumulated } : m
+                    ));
                 }
             }
         } catch (err) {
-            setMessages(prev => prev.map(m => m.id === assistantMsgId ? { ...m, content: "⚠️ Clinical analysis interrupted. Please verify your connection." } : m));
+            setMessages(prev => prev.map(m =>
+                m.id === assistantMsgId ? { ...m, content: "⚠️ Clinical analysis interrupted. Please verify connection." } : m
+            ));
         } finally {
             setStatus("ready");
         }
     }, [chatId, selectedModel, status]);
 
+    // --- LOGIC 2: Handle New Chat (User coming from Landing Page) ---
     useEffect(() => {
-        if (isFirstMessage && pendingMessage && selectedModel && !hasFired.current) {
+        if (isFirstMessage && pendingMessage && !hasFired.current) {
             hasFired.current = true;
             const initialMsg = pendingMessage;
-            setIsFirstMessage(false);
+
+            // Reset Context so the app behaves like an "existing chat" on refresh
             setPendingMessage("");
+            setIsFirstMessage(false);
+
             processMessage(initialMsg);
         }
-    }, [isFirstMessage, pendingMessage, selectedModel, setIsFirstMessage, setPendingMessage, processMessage]);
+    }, [isFirstMessage, pendingMessage, processMessage, setIsFirstMessage, setPendingMessage]);
 
     useEffect(() => {
         scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
@@ -108,7 +111,6 @@ export const ChatMessagesPageView = ({ chatId }: { chatId: string }) => {
 
     return (
         <div className="flex flex-col h-screen bg-background">
-            {/* Professional Header */}
             <header className="flex items-center justify-between px-8 py-4 border-b border-border/60 bg-card/50 backdrop-blur-md z-10">
                 <div className="flex items-center gap-4">
                     <div className="p-2 bg-emerald-500/10 rounded-xl border border-emerald-500/20">
@@ -127,29 +129,21 @@ export const ChatMessagesPageView = ({ chatId }: { chatId: string }) => {
                             <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                            {/* {hfModels?.map(m => (
-                                <SelectItem key={m.id} value={m.hfModelId}>{m.displayName}</SelectItem>
-                            ))} */}
-                            <SelectItem
-                                value="openai/gpt-oss-20b:groq"
-                            >GPT OSS 20B</SelectItem>
+                            <SelectItem value="openai/gpt-oss-20b:groq">GPT OSS 20B</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
             </header>
 
-            {/* Disclaimer Bar */}
             <div className="bg-amber-500/5 px-8 py-2 border-b border-amber-500/10 flex items-center gap-3">
                 <ShieldAlert className="h-3 w-3 text-amber-600" />
                 <p className="text-[10px] text-amber-700 dark:text-amber-500 font-mono uppercase tracking-wider">Non-diagnostic Informational Stream</p>
             </div>
 
-            {/* Messages Area */}
             <div ref={scrollRef} className="flex-1 overflow-y-auto p-6 md:p-12">
                 <div className="max-w-4xl mx-auto space-y-10">
                     {messages.map((m) => (
                         <div key={m.id} className={`flex gap-6 ${m.role === "user" ? "flex-row-reverse" : ""}`}>
-                            {/* Icon Avatar */}
                             <div className={`h-10 w-10 shrink-0 rounded-2xl flex items-center justify-center border shadow-sm transition-all ${m.role === "assistant"
                                 ? "bg-card border-border/60 text-emerald-500"
                                 : "bg-emerald-600 border-emerald-500 text-white"
@@ -157,7 +151,6 @@ export const ChatMessagesPageView = ({ chatId }: { chatId: string }) => {
                                 {m.role === "assistant" ? <BrainCircuit className="h-5 w-5" /> : <User className="h-5 w-5" />}
                             </div>
 
-                            {/* Message Content */}
                             <div className={`relative p-6 rounded-[2rem] max-w-[80%] text-sm shadow-sm leading-relaxed transition-all ${m.role === "user"
                                 ? "bg-emerald-600 text-white rounded-tr-none"
                                 : "bg-card border border-border/60 text-foreground rounded-tl-none"
@@ -177,7 +170,6 @@ export const ChatMessagesPageView = ({ chatId }: { chatId: string }) => {
                 </div>
             </div>
 
-            {/* Footer Input */}
             <footer className="p-6 bg-background border-t border-border/60">
                 <form
                     onSubmit={(e) => { e.preventDefault(); processMessage(input); setInput(""); }}
