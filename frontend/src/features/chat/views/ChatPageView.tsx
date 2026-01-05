@@ -99,18 +99,6 @@ export const ChatPageView = () => {
                             </Button>
                         </form>
 
-                        {/* Quick Actions */}
-                        <div className="flex flex-wrap gap-3 justify-center">
-                            {["Common flu symptoms", "Interpret lab results", "Drug interactions"].map((s) => (
-                                <button
-                                    key={s}
-                                    onClick={() => setPendingMessage(s)}
-                                    className="text-[10px] font-bold uppercase tracking-widest px-4 py-2 rounded-full border border-border/40 bg-background hover:bg-emerald-500/5 hover:border-emerald-500/30 text-muted-foreground transition-all"
-                                >
-                                    {s}
-                                </button>
-                            ))}
-                        </div>
                     </div>
                 </div>
 

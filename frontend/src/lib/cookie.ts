@@ -9,3 +9,7 @@ export const setCookie = (key: CookieKey,value: string, expires: number = 7) => 
 export const getCookie = (key: CookieKey): string | undefined => {
     return Cookies.get(key);
 }
+
+export const deleteCookie = (key: CookieKey) => {
+    Cookies.remove(key);
+}

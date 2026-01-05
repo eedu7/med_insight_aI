@@ -5,16 +5,16 @@ import {
     SidebarHeader,
     SidebarMenu,
     SidebarMenuButton,
-    SidebarMenuItem,
+    SidebarMenuItem
 } from "@/components/ui/sidebar";
 import {
     CrownIcon,
-    LogOutIcon,
     PlusSquareIcon,
     ScanSearchIcon,
-    SparkleIcon,
+    SparkleIcon
 } from "lucide-react";
 import Link from "next/link";
+import { DashboardLogout } from "./dashboard-logout";
 import { DashboardSearch } from "./dashboard-search";
 import { DashboardSidebarTrigger } from "./dashboard-sidebar-trigger";
 import { PreviousChats } from "./previous-chats";
@@ -85,10 +85,7 @@ export const DashboardSidebar = () => {
                     </SidebarMenuItem>
                     {/* Log Out */}
                     <SidebarMenuItem>
-                        <SidebarMenuButton>
-                            <LogOutIcon />
-                            LogOut
-                        </SidebarMenuButton>
+                        <DashboardLogout />
                     </SidebarMenuItem>
                 </SidebarMenu>
             </SidebarFooter>

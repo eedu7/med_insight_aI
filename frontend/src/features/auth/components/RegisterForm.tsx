@@ -78,7 +78,7 @@ export const RegisterForm = () => {
                     name="password"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Username</FormLabel>
+                            <FormLabel>Password</FormLabel>
                             <FormControl>
                                 <Input {...field}
                                     type="password"

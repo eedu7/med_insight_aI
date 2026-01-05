@@ -1,5 +1,6 @@
-import { getCookie, setCookie } from "@/lib/cookie";
+import { deleteCookie, getCookie, setCookie } from "@/lib/cookie";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 interface UserLogin {
@@ -86,6 +87,25 @@ export const useLogin = () => {
     })
 }
 
+export const useLogout = () => {
+    const router = useRouter()
+    // TODO: Call the Logout API, when ready
+    return useMutation({
+        mutationKey: ["auth", "logout"],
+        mutationFn: async () => {
+
+            await new Promise((resolve) => setTimeout(resolve, 500));
+
+            deleteCookie("accessToken");
+            deleteCookie("refreshToken");
+        },
+        onSuccess: () => {
+            toast.success("Logged Out")
+            router.replace("/login")
+        }
+    }
+)
+}
 
 export const useGetUser = () => {
     const accessToken = getCookie("accessToken");
