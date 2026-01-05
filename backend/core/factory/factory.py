@@ -1,7 +1,19 @@
-from controllers import AuthController, ChatController, ScanController, UserController
+from controllers import (
+    AuthController,
+    ChatController,
+    OrderController,
+    ScanController,
+    UserController,
+)
 from controllers.hf_model import HFModelController
 from core.dependencies import SessionDep
-from repositories import ChatRepository, HFModelRepository, ScanRepository, UserRepository
+from repositories import (
+    ChatRepository,
+    HFModelRepository,
+    OrderRepository,
+    ScanRepository,
+    UserRepository,
+)
 
 
 class Factory:
@@ -20,6 +32,9 @@ class Factory:
 
     def get_scan_repository(self, session: SessionDep) -> ScanRepository:
         return ScanRepository(session=session)
+
+    def get_order_repository(self, session: SessionDep) -> OrderRepository:
+        return OrderRepository(session=session)
 
     def get_auth_controller(self, session: SessionDep) -> AuthController:
         repo = self.get_user_repository(session)
@@ -40,6 +55,10 @@ class Factory:
     def get_scan_controller(self, session: SessionDep) -> ScanController:
         repo = self.get_scan_repository(session)
         return ScanController(repo)
+
+    def get_oder_controller(self, session: SessionDep) -> OrderController:
+        repo = self.get_order_repository(session)
+        return OrderController(repo)
 
 
 factory: Factory = Factory()
