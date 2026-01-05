@@ -12,7 +12,7 @@ export const useCreateChat = () => {
         mutationKey: ["create-chat"],
         mutationFn: async () => {
             const res = await fetch(
-                `${process.env.NEXT_PUBLIC_BASE_API_URL}/chat`,
+                `${process.env.NEXT_PUBLIC_BASE_API_URL}/chat/`,
                 {
                     method: "POST",
                     headers: {
@@ -41,7 +41,7 @@ export const useCreateChatMessage = () => {
         mutationKey: ["create-chat"],
         mutationFn: async (data: CreateChatMessageProps) => {
             const res = await fetch(
-                `${process.env.NEXT_PUBLIC_API_URL}/chats/message`,
+                `${process.env.NEXT_PUBLIC_API_URL}/chat/message`,
                 {
                     method: "POST",
                     headers: {
@@ -69,7 +69,7 @@ export const useGetChats = () => {
         queryKey: ["chats"],
         queryFn: async() => {
             const res = await fetch(
-                `${process.env.NEXT_PUBLIC_API_URL}/chats`,
+                `${process.env.NEXT_PUBLIC_API_URL}/chat/`,
                 {
                     method: "GET",
                     headers: {

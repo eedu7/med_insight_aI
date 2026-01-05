@@ -42,7 +42,6 @@ export const ChatMessagesPageView = ({ chatId }: { chatId: string }) => {
 
         const accessToken = getCookie("accessToken");
 
-
         try {
             const response = await fetch("http://localhost:8000/api/v1/chat/message?stream=true", {
                 method: "POST",
@@ -58,6 +57,7 @@ export const ChatMessagesPageView = ({ chatId }: { chatId: string }) => {
                     content,
                 }),
             });
+            console.log("Response:", await response.json())
 
             if (!response.ok) throw new Error();
             const reader = response.body?.getReader();

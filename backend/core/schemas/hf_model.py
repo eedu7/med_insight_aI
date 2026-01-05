@@ -45,5 +45,9 @@ class HFModelRead(HFModelBase):
     model_config = ConfigDict(from_attributes=True)
 
 
-class HFModelCreate(HFModelBase):
-    pass
+class HFModelCreate(BaseModel):
+    display_name: str
+    model_id: str
+    model_provider: str
+    is_active: bool = True
+    is_experimental: bool = False
