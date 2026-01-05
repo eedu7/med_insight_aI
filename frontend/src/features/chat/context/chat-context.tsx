@@ -15,7 +15,7 @@ const ChatContext = createContext<ChatContextType | undefined>(undefined);
 
 export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
     const [pendingMessage, setPendingMessage] = useState("");
-    const [selectedModel, setSelectedModel] = useState("");
+    const [selectedModel, setSelectedModel] = useState("openai/gpt-oss-20b:groq");
     const [isFirstMessage, setIsFirstMessage] = useState(false);
 
     return (

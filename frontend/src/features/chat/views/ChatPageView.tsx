@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { useGetModels } from "@/features/models/hooks/use-models"
 import { Activity, BrainCircuit, SendHorizontal, ShieldAlert, Stethoscope } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useChatContext } from "../context/chat-context"
@@ -18,16 +17,16 @@ export const ChatPageView = () => {
         setIsFirstMessage
     } = useChatContext();
 
-    const { data: hfModels } = useGetModels()
+    // const { data: hfModels } = useGetModels()
     const { mutate, isPending } = useCreateChat()
 
     const handleStartChat = (e?: React.FormEvent) => {
         e?.preventDefault();
         if (!pendingMessage.trim() || isPending) return;
 
-        if (hfModels?.length && !selectedModel) {
-            setSelectedModel(hfModels[0].hfModelId)
-        }
+        // if (hfModels?.length && !selectedModel) {
+        //     setSelectedModel(hfModels[0].hfModelId)
+        // }
 
         setIsFirstMessage(true);
 
@@ -72,9 +71,12 @@ export const ChatPageView = () => {
                                     <SelectValue placeholder="Loading protocols..." />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    {hfModels?.map((m) => (
+                                    {/* {hfModels?.map((m) => (
                                         <SelectItem key={m.id} value={m.hfModelId}>{m.displayName}</SelectItem>
-                                    ))}
+                                    ))} */}
+                                    <SelectItem
+                                        value="openai/gpt-oss-20b:groq"
+                                    >GPT OSS 20B</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>

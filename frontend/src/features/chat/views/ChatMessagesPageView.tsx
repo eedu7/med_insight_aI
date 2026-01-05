@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useGetModels } from "@/features/models/hooks/use-models";
 import { getCookie } from "@/lib/cookie";
 import { BrainCircuit, Fingerprint, Loader2, SendHorizontal, ShieldAlert, Stethoscope, User } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -18,7 +17,7 @@ export const ChatMessagesPageView = ({ chatId }: { chatId: string }) => {
         setIsFirstMessage
     } = useChatContext();
 
-    const { data: hfModels } = useGetModels();
+    // const { data: hfModels } = useGetModels();
     const [input, setInput] = useState("");
     const [messages, setMessages] = useState<{ id: string, role: "user" | "assistant", content: string }[]>([]);
     const [status, setStatus] = useState<"ready" | "streaming">("ready");
@@ -26,7 +25,7 @@ export const ChatMessagesPageView = ({ chatId }: { chatId: string }) => {
     const scrollRef = useRef<HTMLDivElement>(null);
     const hasFired = useRef(false);
 
-    const getModelId = (hfId: string) => hfModels?.find(m => m.hfModelId === hfId)?.id;
+    // const getModelId = (hfId: string) => hfModels?.find(m => m.hfModelId === hfId)?.id;
 
     const processMessage = useCallback(async (content: string) => {
         if (!content.trim() || status !== "ready" || !selectedModel) return;
@@ -52,7 +51,7 @@ export const ChatMessagesPageView = ({ chatId }: { chatId: string }) => {
                 body: JSON.stringify({
                     chat_id: chatId,
                     model_name: selectedModel,
-                    model_id: getModelId(selectedModel),
+                    model_id: "f5bf8a3c-7e5c-437e-a571-a83125c8866f",
                     role: "user",
                     content,
                 }),
@@ -77,7 +76,7 @@ export const ChatMessagesPageView = ({ chatId }: { chatId: string }) => {
         } finally {
             setStatus("ready");
         }
-    }, [chatId, selectedModel, status, hfModels]);
+    }, [chatId, selectedModel, status]);
 
     useEffect(() => {
         if (isFirstMessage && pendingMessage && selectedModel && !hasFired.current) {
@@ -114,9 +113,12 @@ export const ChatMessagesPageView = ({ chatId }: { chatId: string }) => {
                             <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                            {hfModels?.map(m => (
+                            {/* {hfModels?.map(m => (
                                 <SelectItem key={m.id} value={m.hfModelId}>{m.displayName}</SelectItem>
-                            ))}
+                            ))} */}
+                            <SelectItem
+                                value="openai/gpt-oss-20b:groq"
+                            >GPT OSS 20B</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
