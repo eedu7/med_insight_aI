@@ -13,6 +13,7 @@ dependencies = [
     "huggingface[mcp,torch]>=0.0.1",
     "minio>=7.2.20",
     "pillow>=12.1.0",
+    "polar-sdk>=0.28.1",
     "psycopg2>=2.9.11",
     "pydantic>=2.12.5",
     "pydantic-settings>=2.12.0",

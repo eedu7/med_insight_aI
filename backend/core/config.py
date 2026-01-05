@@ -30,6 +30,12 @@ class Config(BaseSettings):
     MINIO_SECURE: bool = False
     MINIO_BUCKET_NAME: str = "med-insight-ai"
 
+    # Polar
+    POLAR_ACCESS_TOKEN: str = ""
+    POLAR_SERVER: str = "sandbox"
+    POLAR_PRODUCT_ID: str = ""
+    POLAR_PRODUCT_SLUG: str = ""
+
     model_config = SettingsConfigDict(
         env_file=".env", env_file_encoding="utf-8", case_sensitive=True, extra="ignore"
     )
