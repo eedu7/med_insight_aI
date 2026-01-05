@@ -1,5 +1,5 @@
 import { getCookie } from "@/lib/cookie";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 interface CreateChatRead {
     id: string;
@@ -7,6 +7,7 @@ interface CreateChatRead {
 }
 
 export const useCreateChat = () => {
+    const queryClient  = useQueryClient();
     const accessToken = getCookie("accessToken");
     return useMutation({
         mutationKey: ["create-chat"],
@@ -23,6 +24,11 @@ export const useCreateChat = () => {
             );
             return res.json() as Promise<CreateChatRead>;
         },
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["chats", "use-get-chats"]
+            })
+        }
     })
 }
 
@@ -38,7 +44,7 @@ export const useCreateChatMessage = () => {
     const accessToken = getCookie("accessToken");
 
     return useMutation({
-        mutationKey: ["create-chat"],
+        mutationKey: ["create-chat-message"],
         mutationFn: async (data: CreateChatMessageProps) => {
             const res = await fetch(
                 `${process.env.NEXT_PUBLIC_API_URL}/chat/message`,
@@ -62,30 +68,17 @@ export const useCreateChatMessage = () => {
     })
 }
 
-interface UserChatMessage {
-    model_id: string;
-    id: string;
-    updated_at: string;
-    created_at: string;
-    chat_id: string;
-    role: string;
-    content: string;  
-}
-
 interface UserChat {
     id: string;
-    updated_at: string;
-    created_at: string;
     user_id: string;
     title: string;
-    messages: UserChatMessage[]
 }
 
 export const useGetChats = () => {
     const accessToken = getCookie("accessToken");
 
     return useQuery({
-        queryKey: ["chats"],
+        queryKey: ["chats", "use-get-chats"],
         queryFn: async() => {
             const res = await fetch(
                 `${process.env.NEXT_PUBLIC_BASE_API_URL}/chat/`,

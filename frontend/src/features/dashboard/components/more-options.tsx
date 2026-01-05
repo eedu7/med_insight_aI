@@ -4,11 +4,10 @@ import { EllipsisVerticalIcon, PenBoxIcon, Share2Icon, Trash2Icon } from "lucide
 export const MoreOptions = () => {
     return (
         <DropdownMenu>
-            <DropdownMenuTrigger>
+            <DropdownMenuTrigger asChild>
                 <EllipsisVerticalIcon className="size-4 " />
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-
                 <DropdownMenuItem>
                     <PenBoxIcon />
                     Edit

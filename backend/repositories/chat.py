@@ -1,8 +1,7 @@
 from typing import Dict
 
-from sqlalchemy import select
+from sqlalchemy import desc, select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import selectinload
 
 from core.models import Chat, ChatMessage
 
@@ -17,7 +16,7 @@ class ChatRepository:
         return result.scalar_one_or_none()
 
     async def get_all_chats(self, skip: int = 0, limit: int = 20, user_id: str | None = None):
-        stmt = select(Chat).options(selectinload(Chat.messages)).offset(skip).limit(limit)
+        stmt = select(Chat).offset(skip).limit(limit).order_by(desc(Chat.created_at))
         if user_id:
             stmt.where(Chat.user_id == user_id)
         result = await self.session.execute(stmt)
