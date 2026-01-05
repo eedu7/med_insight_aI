@@ -1,3 +1,4 @@
+import { getCookie } from "@/lib/cookie";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 interface CreateChatRead {
@@ -6,6 +7,7 @@ interface CreateChatRead {
 }
 
 export const useCreateChat = () => {
+    const accessToken = getCookie("accessToken");
     return useMutation({
         mutationKey: ["create-chat"],
         mutationFn: async () => {
@@ -15,7 +17,7 @@ export const useCreateChat = () => {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
-                        "Authorization": `Bearer ${process.env.NEXT_PUBLIC_TOKEN}`,
+                        "Authorization": `Bearer ${accessToken}`,
                     },
                 }
             );
@@ -33,6 +35,8 @@ interface CreateChatMessageProps {
 }
 
 export const useCreateChatMessage = () => {
+    const accessToken = getCookie("accessToken");
+
     return useMutation({
         mutationKey: ["create-chat"],
         mutationFn: async (data: CreateChatMessageProps) => {
@@ -42,6 +46,7 @@ export const useCreateChatMessage = () => {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
+                        "Authorization": `Bearer ${accessToken}`
                     },
                     body: JSON.stringify({
                         "chat_id": data.chatId,
@@ -58,6 +63,8 @@ export const useCreateChatMessage = () => {
 }
 
 export const useGetChats = () => {
+    const accessToken = getCookie("accessToken");
+
     return useQuery({
         queryKey: ["chats"],
         queryFn: async() => {
@@ -67,6 +74,7 @@ export const useGetChats = () => {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
+                        "Authorization": `Bearer ${accessToken}`
                     },
                 }
             );

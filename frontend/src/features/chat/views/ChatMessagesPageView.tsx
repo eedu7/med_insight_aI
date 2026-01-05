@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useGetModels } from "@/features/models/hooks/use-models";
+import { getCookie } from "@/lib/cookie";
 import { BrainCircuit, Fingerprint, Loader2, SendHorizontal, ShieldAlert, Stethoscope, User } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useChatContext } from "../context/chat-context";
@@ -39,12 +40,15 @@ export const ChatMessagesPageView = ({ chatId }: { chatId: string }) => {
 
         setStatus("streaming");
 
+        const accessToken = getCookie("accessToken");
+
+
         try {
             const response = await fetch("http://localhost:8000/api/v1/chat/message?stream=true", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${process.env.NEXT_PUBLIC_TOKEN}`
+                    "Authorization": `Bearer ${accessToken}`
                 },
                 body: JSON.stringify({
                     chat_id: chatId,

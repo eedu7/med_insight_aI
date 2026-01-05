@@ -1,5 +1,7 @@
+import { getCookie } from '@/lib/cookie';
 import { useQuery } from '@tanstack/react-query';
 
+// TODO: Update these
 export interface HFModelResponse {
     id: string;
     userId: string;
@@ -33,6 +35,8 @@ export interface HFModelResponse {
 }
 
 export const useGetModels = () => {
+    const accessToken = getCookie("accessToken");
+
     return useQuery({
         queryKey: ['models'],
         queryFn: async () => {
@@ -41,7 +45,7 @@ export const useGetModels = () => {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
-                        "Authorization": `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiOTdjZDdiYmYtMWIzNi00OTc2LWEzODYtYmEyMDNjYmU3MGVjIiwiZW1haWwiOiJqb2huLmRvZUBleGFtcGxlLmNvbSIsImV4cCI6MTc2NzU0MzgwOSwidHlwZSI6ImFjY2VzcyJ9.Nz4R2bwMQQYCP-jY_IYnPkeUWBwFvEgJC1_aOOukOrU`
+                        "Authorization": `Bearer ${accessToken}`
                     },
                 }
 

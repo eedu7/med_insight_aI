@@ -88,11 +88,11 @@ export const useLogin = () => {
 
 
 export const useGetUser = () => {
+    const accessToken = getCookie("accessToken");
     return useQuery({
         queryKey: ["auth", "getUser"],
         queryFn: async () => {
 
-            const accessToken = getCookie("accessToken");
 
             const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}/auth/me`, {
                 method: "GET",

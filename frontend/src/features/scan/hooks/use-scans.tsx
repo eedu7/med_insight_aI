@@ -1,7 +1,10 @@
+import { getCookie } from '@/lib/cookie';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 
 export const useCreateScan = () => {
+    const accessToken = getCookie("accessToken");
+
     const router = useRouter();
     return useMutation({
         mutationKey: ['create-scan'],
@@ -10,7 +13,7 @@ export const useCreateScan = () => {
                 method: 'POST',
                 body: data,
                 headers: {
-                    "Authorization": `Bearer ${process.env.NEXT_PUBLIC_TOKEN}`
+                    "Authorization": `Bearer ${accessToken}`
                 }
             });
 

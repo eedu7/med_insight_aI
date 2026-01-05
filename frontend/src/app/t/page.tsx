@@ -8,6 +8,7 @@ import {
     SelectTrigger,
     SelectValue
 } from "@/components/ui/select";
+import { getCookie } from "@/lib/cookie";
 import { Bot, Loader2, SendHorizontal, Settings2, Sparkles, User } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
@@ -49,10 +50,18 @@ export default function ChatPageView() {
         const assistantMsgId = (Date.now() + 1).toString();
         setMessages((prev) => [...prev, { id: assistantMsgId, role: "assistant", content: "" }]);
 
+
+        const accessToken = getCookie("accessToken");
+
         try {
             const response = await fetch("http://localhost:8000/api/v1/chat", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${accessToken}`
+
+
+                },
                 body: JSON.stringify({
                     model: selectedModel,
                     messages: updatedHistory.map(m => ({ role: m.role, content: m.content })),
