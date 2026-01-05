@@ -1,6 +1,6 @@
 from typing import Dict
 
-from sqlalchemy import select
+from sqlalchemy import desc, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
@@ -28,7 +28,7 @@ class ScanRepository:
         skip: int = 0,
         limit: int = 20,
     ):
-        stmt = select(Scan).offset(skip).limit(limit)
+        stmt = select(Scan).offset(skip).limit(limit).order_by(desc(Scan.created_at))
         if user_id:
             stmt.where(Scan.user_id == user_id)
 
