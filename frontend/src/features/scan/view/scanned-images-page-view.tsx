@@ -1,7 +1,9 @@
 "use client";
 
+import { CustomReactMarkdown } from "@/components/CustomReactMarkdown";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area"; // Ensure you have installed: npx shadcn@latest add scroll-area
 import {
     AlertCircle,
     BrainCircuit,
@@ -58,6 +60,7 @@ export const ScannedImagesPageView = ({ scanId }: { scanId: string }) => {
     return (
         <div className="min-h-screen bg-background p-6 lg:p-12">
             <div className="max-w-6xl mx-auto space-y-10">
+                {/* Header Info */}
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                     <div className="space-y-4">
                         <Button variant="ghost" size="sm" className="rounded-full gap-2 text-muted-foreground hover:text-emerald-500 hover:bg-emerald-500/5" asChild>
@@ -75,6 +78,7 @@ export const ScannedImagesPageView = ({ scanId }: { scanId: string }) => {
                     </Badge>
                 </div>
 
+                {/* Scanned Items Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     {Array.from({ length: scan.number_of_images }).map((_, index) => {
                         const imageData = scan.scanned_images[index];
@@ -100,6 +104,7 @@ export const ScannedImagesPageView = ({ scanId }: { scanId: string }) => {
                                             </Badge>
                                         </div>
 
+                                        {/* Image Viewport */}
                                         <div
                                             className="relative aspect-video w-full rounded-2xl bg-black border border-border/40 overflow-hidden group/img cursor-zoom-in"
                                             onClick={() => setSelectedImage(imageData.file_name)}
@@ -114,26 +119,25 @@ export const ScannedImagesPageView = ({ scanId }: { scanId: string }) => {
                                             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center">
                                                 <Maximize2 className="text-white h-8 w-8" />
                                             </div>
-                                            <div className="absolute inset-0 pointer-events-none border-[0.5px] border-emerald-500/20">
-                                                <div className="w-full h-[1px] bg-emerald-500/10 absolute top-1/2 -translate-y-1/2" />
-                                                <div className="w-[1px] h-full bg-emerald-500/10 absolute left-1/2 -translate-x-1/2" />
-                                            </div>
                                         </div>
 
+                                        {/* Interpretation with Shadcn ScrollArea */}
                                         <div className="space-y-2">
                                             <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Neural Interpretation</p>
-                                            <div className="min-h-[60px] p-4 rounded-2xl bg-muted/30 border border-border/20">
+                                            <ScrollArea className="h-[280px] w-full rounded-2xl bg-muted/30 border border-border/20 p-5">
                                                 {imageData.result ? (
-                                                    <p className="text-sm text-foreground leading-relaxed font-medium">
-                                                        {imageData.result}
-                                                    </p>
+                                                    <div className="pr-4">
+                                                        <CustomReactMarkdown
+                                                            text={imageData.result}
+                                                        />
+                                                    </div>
                                                 ) : (
-                                                    <div className="flex items-center gap-2 text-muted-foreground italic">
+                                                    <div className="flex items-center gap-2 text-muted-foreground italic h-full py-10 justify-center">
                                                         <Loader2 className="h-3 w-3 animate-spin" />
-                                                        <span className="text-xs">Finalizing report...</span>
+                                                        <span className="text-xs">Processing report...</span>
                                                     </div>
                                                 )}
-                                            </div>
+                                            </ScrollArea>
                                         </div>
 
                                         <div className="pt-4 border-t border-border/40 flex justify-between items-center">
@@ -146,14 +150,14 @@ export const ScannedImagesPageView = ({ scanId }: { scanId: string }) => {
                                     </div>
                                 ) : isFailed ? (
                                     <div className="bg-destructive/5 border border-destructive/20 rounded-[2.5rem] p-8 space-y-6">
-                                        <div className="flex justify-between items-center">
-                                            <Badge variant="destructive" className="uppercase text-[8px]">Processing Failed</Badge>
+                                        <div className="flex justify-between items-center text-destructive">
+                                            <Badge variant="destructive" className="uppercase text-[8px]">Node Failed</Badge>
                                         </div>
                                         <div className="aspect-video w-full rounded-2xl bg-muted/10 flex flex-col items-center justify-center gap-2">
                                             <AlertCircle className="h-8 w-8 text-destructive/40" />
-                                            <p className="text-[10px] font-mono text-destructive/60">Node Analysis Error</p>
+                                            <p className="text-[10px] font-mono text-destructive/60">Data Conflict Detected</p>
                                         </div>
-                                        <p className="text-xs text-muted-foreground font-mono">The system encountered an error while processing this frame. Manual review required.</p>
+                                        <p className="text-xs text-muted-foreground font-mono">System encountered a neural processing error on this frame.</p>
                                     </div>
                                 ) : (
                                     <div className="bg-card/40 border border-dashed border-border/60 rounded-[2.5rem] p-8 space-y-6 relative overflow-hidden">
@@ -166,9 +170,9 @@ export const ScannedImagesPageView = ({ scanId }: { scanId: string }) => {
                                             <div className="absolute top-0 left-0 w-full h-[2px] bg-emerald-500/40 shadow-[0_0_15px_rgba(16,185,129,0.5)] animate-[scan_3s_ease-in-out_infinite]" />
                                         </div>
                                         <div className="pt-4 border-t border-border/40 flex justify-between items-center relative z-10">
-                                            <div className="flex items-center gap-2">
-                                                <Loader2 className="h-3 w-3 text-emerald-500 animate-spin" />
-                                                <span className="text-[9px] font-mono uppercase tracking-widest text-emerald-500/60 font-bold">
+                                            <div className="flex items-center gap-2 text-emerald-500/60">
+                                                <Loader2 className="h-3 w-3 animate-spin" />
+                                                <span className="text-[9px] font-mono uppercase tracking-widest font-bold">
                                                     {imageData?.status === "processing" ? "Analyzing..." : "Awaiting Data..."}
                                                 </span>
                                             </div>
@@ -182,6 +186,7 @@ export const ScannedImagesPageView = ({ scanId }: { scanId: string }) => {
                 </div>
             </div>
 
+            {/* Lightbox Overlay */}
             {selectedImage && (
                 <div
                     className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 backdrop-blur-md animate-in fade-in duration-300 p-4 md:p-10"
@@ -193,7 +198,6 @@ export const ScannedImagesPageView = ({ scanId }: { scanId: string }) => {
                     >
                         <X className="h-10 w-10" />
                     </button>
-
                     <div className="relative w-full h-full flex items-center justify-center">
                         <div className="relative w-full h-full max-w-5xl max-h-[85vh]">
                             <Image
