@@ -1,4 +1,3 @@
-// previous-chats.tsx
 "use client";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
@@ -6,14 +5,18 @@ import {
     SidebarGroupContent,
     SidebarGroupLabel,
     SidebarMenu,
+    SidebarMenuAction,
     SidebarMenuButton,
     SidebarMenuItem,
-    useSidebar,
+    useSidebar
 } from "@/components/ui/sidebar";
+import { useGetChats } from "@/features/chat/hooks/use-chats";
 import Link from "next/link";
 import { Activity } from "react";
+import { MoreOptions } from "./more-options";
 
 export const PreviousChats = () => {
+    const { data, isLoading } = useGetChats();
     const { open } = useSidebar();
 
     return (
@@ -26,11 +29,19 @@ export const PreviousChats = () => {
                 <SidebarGroupContent className="flex-1 min-h-0">
                     <ScrollArea className="h-full w-full">
                         <SidebarMenu className="px-2">
-                            <SidebarMenuItem>
-                                <SidebarMenuButton asChild>
-                                    <Link href="#">Lorem, ipsum dolor.</Link>
-                                </SidebarMenuButton>
-                            </SidebarMenuItem>
+                            {
+                                data?.map(({ id, title }) => (
+                                    <SidebarMenuItem key={id}>
+                                        <SidebarMenuButton asChild>
+                                            <Link href={`/chat/${id}`}>{title}</Link>
+                                        </SidebarMenuButton>
+                                        <SidebarMenuAction>
+                                            <MoreOptions />
+                                        </SidebarMenuAction>
+                                    </SidebarMenuItem>
+                                ))
+                            }
+
                         </SidebarMenu>
                     </ScrollArea>
                 </SidebarGroupContent>
@@ -38,3 +49,5 @@ export const PreviousChats = () => {
         </Activity>
     );
 };
+
+

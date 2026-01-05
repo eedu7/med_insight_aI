@@ -62,6 +62,25 @@ export const useCreateChatMessage = () => {
     })
 }
 
+interface UserChatMessage {
+    model_id: string;
+    id: string;
+    updated_at: string;
+    created_at: string;
+    chat_id: string;
+    role: string;
+    content: string;  
+}
+
+interface UserChat {
+    id: string;
+    updated_at: string;
+    created_at: string;
+    user_id: string;
+    title: string;
+    messages: UserChatMessage[]
+}
+
 export const useGetChats = () => {
     const accessToken = getCookie("accessToken");
 
@@ -69,7 +88,7 @@ export const useGetChats = () => {
         queryKey: ["chats"],
         queryFn: async() => {
             const res = await fetch(
-                `${process.env.NEXT_PUBLIC_API_URL}/chat/`,
+                `${process.env.NEXT_PUBLIC_BASE_API_URL}/chat/`,
                 {
                     method: "GET",
                     headers: {
@@ -78,7 +97,7 @@ export const useGetChats = () => {
                     },
                 }
             );
-            return res.json();
+            return res.json() as Promise<UserChat[]>;
         }
     })
 }
