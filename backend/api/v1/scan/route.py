@@ -7,7 +7,7 @@ from controllers import ScanController
 from core.dependencies import AuthenticationRequired, HuggingFaceServiceDep, MinioDep
 from core.exceptions import BadRequestException
 from core.factory import factory
-from core.schemas.scan import ScanRead
+from core.schemas.scan import ScanRead, ScanReadComplete
 from core.utils import process_image
 
 router = APIRouter(dependencies=[Depends(AuthenticationRequired)])
@@ -27,16 +27,15 @@ async def get_all_scans(
     )
 
 
-@router.get("/{scan_id}", response_model=ScanRead)
+@router.get("/{scan_id}", response_model=ScanReadComplete)
 async def get_scan_by_id(
     scan_id: UUID,
-    request: Request,
     scan_controller: ScanControllerDep,
 ):
-    return await scan_controller.get_scan_by_id(scan_id=str(scan_id), user_id=request.state.user.id)
+    return await scan_controller.get_scan_by_id(scan_id=str(scan_id))
 
 
-@router.post("/", status_code=status.HTTP_201_CREATED)
+@router.post("/", status_code=status.HTTP_201_CREATED, response_model=ScanRead)
 async def scan(
     request: Request,
     background_tasks: BackgroundTasks,

@@ -7,6 +7,6 @@ class ScannedImageRead(BaseModel):
     id: UUID
     status: str
     file_name: str
-    results: str
+    results: str | None = None
 
     model_config = ConfigDict(from_attributes=True)

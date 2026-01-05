@@ -1,17 +1,25 @@
 from core.exceptions import BadRequestException
 from core.utils import random_chat_title
 from repositories import ScanRepository
+from services import MinioService
 
 
 class ScanController:
-    def __init__(self, scan_repository: ScanRepository):
+    def __init__(self, scan_repository: ScanRepository, minio: MinioService):
         self.scan_repository = scan_repository
+        self.minio = minio
 
-    async def get_scan_by_id(self, scan_id: str, user_id: str | None = None):
+    async def get_scan_by_id(self, scan_id: str):
         try:
-            return await self.scan_repository.get_scan_by_id(id=scan_id, user_id=user_id)
+            scan = await self.scan_repository.get_scan_by_id(id=scan_id)
         except Exception as e:
             raise BadRequestException(str(e))
+
+        if scan.scanned_images:
+            for s in scan.scanned_images:
+                s.file_name = self.minio.get_signed_url(s.file_name)
+
+        return scan
 
     async def get_all_scans(self, skip: int = 0, limit: int = 20, user_id: str | None = None):
         try:

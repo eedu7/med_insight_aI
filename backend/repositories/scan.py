@@ -13,8 +13,6 @@ class ScanRepository:
 
     async def get_scan_by_id(self, id: str, user_id: str | None = None):
         stmt = select(Scan).options(selectinload(Scan.scanned_images)).where(Scan.id == id)
-        if user_id:
-            stmt.where(Scan.user_id == user_id)
 
         result = await self.session.execute(stmt)
         return result.scalar_one_or_none()
@@ -25,7 +23,7 @@ class ScanRepository:
         skip: int = 0,
         limit: int = 20,
     ):
-        stmt = select(Scan).options(selectinload(Scan.scanned_images)).offset(skip).limit(limit)
+        stmt = select(Scan).offset(skip).limit(limit)
         if user_id:
             stmt.where(Scan.user_id == user_id)
 

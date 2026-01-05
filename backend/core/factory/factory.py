@@ -14,7 +14,7 @@ from repositories import (
     ScanRepository,
     UserRepository,
 )
-from services import get_polar_service
+from services import get_minio_service_service, get_polar_service
 
 
 class Factory:
@@ -56,7 +56,8 @@ class Factory:
 
     def get_scan_controller(self, session: SessionDep) -> ScanController:
         repo = self.get_scan_repository(session)
-        return ScanController(repo)
+        minio = get_minio_service_service()
+        return ScanController(repo, minio)
 
     def get_oder_controller(self, session: SessionDep) -> OrderController:
         repo = self.get_order_repository(session)
