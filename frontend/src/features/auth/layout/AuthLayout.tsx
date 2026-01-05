@@ -1,7 +1,9 @@
-import React from 'react'
+import { requireUnAuth } from '@/lib/auth';
+import React from 'react';
 
-export const AuthLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
+export const AuthLayout = async ({ children }: Readonly<{ children: React.ReactNode }>) => {
+    await requireUnAuth();
     return (
-        <div>{children}</div>
+        <div className='h-screen w-full grid place-items-center'>{children}</div>
     )
 }
