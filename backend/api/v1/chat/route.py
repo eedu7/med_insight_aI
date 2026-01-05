@@ -1,4 +1,5 @@
 from typing import Annotated
+from uuid import UUID
 
 from fastapi import APIRouter, Depends, Query, Request
 from fastapi.responses import StreamingResponse
@@ -6,12 +7,21 @@ from fastapi.responses import StreamingResponse
 from controllers import ChatController
 from core.dependencies import AuthenticationRequired, HuggingFaceServiceDep
 from core.factory import factory
-from core.schemas.chat import ChatRead
+from core.schemas.chat import ChatCreateResponse, ChatRead
 from core.schemas.chat_message import ChatMessageCreate
 
 router = APIRouter(dependencies=[Depends(AuthenticationRequired)])
 
 ChatControllerDep = Annotated[ChatController, Depends(factory.get_chat_controller)]
+
+
+@router.get("/{chat_id}", response_model=ChatRead)
+async def get_all_chat_by_id(
+    chat_id: UUID,
+    request: Request,
+    chat_controller: ChatControllerDep,
+):
+    return await chat_controller.get_chat_by_id(str(chat_id), request.state.user.id)
 
 
 @router.get("/")
@@ -24,7 +34,7 @@ async def get_all_chats(
     return await chat_controller.get_all_chats(skip, limit, request.state.user.id)
 
 
-@router.post("/", response_model=ChatRead)
+@router.post("/", response_model=ChatCreateResponse)
 async def create_chat(
     request: Request,
     chat_controller: ChatControllerDep,

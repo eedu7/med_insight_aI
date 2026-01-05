@@ -1,6 +1,6 @@
 from typing import Literal
 
-from core.exceptions import BadRequestException
+from core.exceptions import BadRequestException, NotFoundException
 from core.models import Chat
 from core.utils import random_chat_title
 from repositories import ChatRepository
@@ -12,6 +12,16 @@ class ChatController:
         chat_repository: ChatRepository,
     ) -> None:
         self.chat_repository = chat_repository
+
+    async def get_chat_by_id(self, chat_id: str, user_id: str) -> Chat:
+        try:
+            chat = await self.chat_repository.get_chat_by_id(chat_id=chat_id, user_id=user_id)
+        except Exception as e:
+            raise BadRequestException(str(e))
+
+        if chat:
+            return chat
+        raise NotFoundException(f"Chat by id {chat_id} not found")
 
     async def get_all_chats(self, skip: int = 0, limit: int = 20, user_id: str | None = None):
         try:

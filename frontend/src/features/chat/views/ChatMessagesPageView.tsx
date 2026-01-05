@@ -6,6 +6,7 @@ import { getCookie } from "@/lib/cookie";
 import { BrainCircuit, Fingerprint, Loader2, SendHorizontal, ShieldAlert, Stethoscope, User } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useChatContext } from "../context/chat-context";
+import { useGetChatById } from "../hooks/use-chats";
 
 export const ChatMessagesPageView = ({ chatId }: { chatId: string }) => {
     const {
@@ -17,6 +18,8 @@ export const ChatMessagesPageView = ({ chatId }: { chatId: string }) => {
         setIsFirstMessage
     } = useChatContext();
 
+    const { data: chats } = useGetChatById(chatId);
+
     // const { data: hfModels } = useGetModels();
     const [input, setInput] = useState("");
     const [messages, setMessages] = useState<{ id: string, role: "user" | "assistant", content: string }[]>([]);
@@ -24,6 +27,18 @@ export const ChatMessagesPageView = ({ chatId }: { chatId: string }) => {
 
     const scrollRef = useRef<HTMLDivElement>(null);
     const hasFired = useRef(false);
+
+
+    useEffect(() => {
+        if (chats?.messages && chats.messages.length === 0) {
+            const formattedMessages = chats.messages.map((m) => ({
+                id: m.id,
+                role: m.role as "user" | "assistant",
+                content: m.content,
+            }));
+            setMessages(formattedMessages);
+        }
+    }, [chats, messages.length])
 
     // const getModelId = (hfId: string) => hfModels?.find(m => m.hfModelId === hfId)?.id;
 
