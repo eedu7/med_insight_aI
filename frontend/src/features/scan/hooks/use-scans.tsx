@@ -40,6 +40,7 @@ export const useCreateScan = () => {
     });
 };
 
+
 export const useGetScans = () => {
     const accessToken = getCookie("accessToken");
     return useQuery({

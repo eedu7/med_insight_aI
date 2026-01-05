@@ -31,11 +31,13 @@ export const PreviousChats = () => {
                         <SidebarMenu className="px-2">
                             {
                                 data?.map(({ id, title }) => (
-                                    <SidebarMenuItem key={id}>
+                                    <SidebarMenuItem key={id} className="group/item">
                                         <SidebarMenuButton asChild>
                                             <Link href={`/chat/${id}`}>{title}</Link>
                                         </SidebarMenuButton>
-                                        <SidebarMenuAction>
+                                        <SidebarMenuAction
+                                            className="opacity-0 group-hover/item:opacity-100 transition-opacity"
+                                        >
                                             <MoreOptions />
                                         </SidebarMenuAction>
                                     </SidebarMenuItem>
