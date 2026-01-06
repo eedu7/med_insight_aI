@@ -17,8 +17,8 @@ class OrderRepository:
         await self.session.refresh(order)
         return order
 
-    async def update(self, order_id: str, attributes: Dict) -> Order | None:
-        result = await self.session.execute(select(Order).where(Order.id == order_id))
+    async def update(self, user_id: str, attributes: Dict) -> Order | None:
+        result = await self.session.execute(select(Order).where(Order.user_id == user_id))
         order: Order | None = result.scalar_one_or_none()
 
         if not order:
