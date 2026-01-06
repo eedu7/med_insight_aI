@@ -8,7 +8,6 @@ import {
     SidebarMenuItem
 } from "@/components/ui/sidebar";
 import {
-    CrownIcon,
     PlusSquareIcon,
     ScanSearchIcon,
     SparkleIcon
@@ -17,6 +16,7 @@ import Link from "next/link";
 import { DashboardLogout } from "./dashboard-logout";
 import { DashboardSearch } from "./dashboard-search";
 import { DashboardSidebarTrigger } from "./dashboard-sidebar-trigger";
+import { DashboardUpgradeToPro } from "./dashboard-upgrade-to-pro";
 import { PreviousChats } from "./previous-chats";
 import { PreviousScans } from "./previous-scans";
 
@@ -78,10 +78,7 @@ export const DashboardSidebar = () => {
                 <SidebarMenu>
                     {/* Upgrade Plan */}
                     <SidebarMenuItem>
-                        <SidebarMenuButton>
-                            <CrownIcon />
-                            Upgrade Plan
-                        </SidebarMenuButton>
+                        <DashboardUpgradeToPro />
                     </SidebarMenuItem>
                     {/* Log Out */}
                     <SidebarMenuItem>

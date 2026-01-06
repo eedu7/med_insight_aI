@@ -1,7 +1,6 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Request
-from fastapi.responses import RedirectResponse
+from fastapi import APIRouter, Depends, Request, status
 from polar_sdk import (
     AddressInputTypedDict,
     CheckoutCreateTypedDict,
@@ -45,10 +44,10 @@ async def create_checkout(
         polar_order_id=checkout.id,
     )
 
-    return checkout
+    return {"url": checkout.url}
 
 
-@router.post("/success")
+@router.post("/success", status_code=status.HTTP_204_NO_CONTENT)
 async def payment_successful(
     request: Request,
     polar: PolarDep,
@@ -64,10 +63,6 @@ async def payment_successful(
 
     if has_active_subscription > 0:
         await order_controller.update(user_id=str(user.id), attributes={"status": "success"})
-
-        return customer_status
-
-    return RedirectResponse("http://localhost:3000/chat")
 
 
 @router.post("/failure")
@@ -86,7 +81,3 @@ async def payment_failed(
 
     if has_active_subscription == 0:
         await order_controller.update(user_id=str(user.id), attributes={"status": "error"})
-
-        return customer_status
-
-    return RedirectResponse("http://localhost:3000/chat")
