@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { SelectModel } from "@/features/models/components/SelectModel"
 import { Activity, BrainCircuit, SendHorizontal, ShieldAlert, Stethoscope } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useChatContext } from "../context/chat-context"
@@ -14,7 +14,8 @@ export const ChatPageView = () => {
         setPendingMessage,
         selectedModel,
         setSelectedModel,
-        setIsFirstMessage
+        setIsFirstMessage,
+        setSelectedModelId
     } = useChatContext();
 
     // const { data: hfModels } = useGetModels()
@@ -66,19 +67,11 @@ export const ChatPageView = () => {
                             <label className="text-[10px] font-black text-emerald-600/70 flex items-center gap-2 tracking-[0.3em] uppercase">
                                 <Activity className="h-3 w-3" /> Select Analysis Engine
                             </label>
-                            <Select value={selectedModel} onValueChange={setSelectedModel}>
-                                <SelectTrigger className="w-72 h-12 bg-background border-border/60 rounded-2xl shadow-sm">
-                                    <SelectValue placeholder="Loading protocols..." />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {/* {hfModels?.map((m) => (
-                                        <SelectItem key={m.id} value={m.hfModelId}>{m.displayName}</SelectItem>
-                                    ))} */}
-                                    <SelectItem
-                                        value="openai/gpt-oss-20b:groq"
-                                    >GPT OSS 20B</SelectItem>
-                                </SelectContent>
-                            </Select>
+                            <SelectModel
+                                onValudIdChange={setSelectedModelId}
+                                value={selectedModel}
+                                onValueChange={setSelectedModel}
+                            />
                         </div>
 
                         {/* Input Form */}

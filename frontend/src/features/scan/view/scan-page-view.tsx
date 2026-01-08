@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { SelectModel } from "@/features/models/components/SelectModel";
 import {
     AlertCircle,
     BrainCircuit,
@@ -13,7 +14,6 @@ import { useState } from "react";
 import { DropZone, isFileDropItem } from "react-aria-components";
 import { ScanHeader } from "../components/scan-header";
 import { SelectImages } from "../components/select-images";
-import { SelectScanType } from "../components/select-scan-type";
 import { useCreateScan } from "../hooks/use-scans";
 
 interface ImageItem {
@@ -25,7 +25,8 @@ interface ImageItem {
 
 export const ScanPageView = () => {
     const [items, setItems] = useState<ImageItem[]>([]);
-    const [scanModel, setScanModel] = useState<string>("prithivMLmods/open-age-detection");
+    const [scanModel, setScanModel] = useState<string>("");
+    const [scanModelId, setScanModelId] = useState<string>("");
 
     const createScanMutation = useCreateScan();
 
@@ -79,7 +80,11 @@ export const ScanPageView = () => {
                             <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600/70">
                                 <Sparkles className="h-4 w-4" /> Protocol Selection
                             </div>
-                            <SelectScanType value={scanModel} onValueChange={setScanModel} />
+                            <SelectModel
+                                onValudIdChange={setScanModelId}
+                                value={scanModel}
+                                onValueChange={setScanModel}
+                            />
                         </section>
 
                         <section className="space-y-6">

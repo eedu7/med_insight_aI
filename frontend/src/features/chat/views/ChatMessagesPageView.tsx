@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { SelectModel } from "@/features/models/components/SelectModel";
 import { getCookie } from "@/lib/cookie";
 import { BrainCircuit, Loader2, SendHorizontal, Stethoscope, User } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -10,6 +10,8 @@ import { useGetChatById } from "../hooks/use-chats";
 
 export const ChatMessagesPageView = ({ chatId }: { chatId: string }) => {
     const {
+        selectedModelId,
+        setSelectedModelId,
         pendingMessage,
         setPendingMessage,
         selectedModel,
@@ -62,7 +64,7 @@ export const ChatMessagesPageView = ({ chatId }: { chatId: string }) => {
                 body: JSON.stringify({
                     chat_id: chatId,
                     model_name: selectedModel,
-                    model_id: "f5bf8a3c-7e5c-437e-a571-a83125c8866f",
+                    model_id: selectedModelId,
                     role: "user",
                     content,
                 }),
@@ -122,14 +124,11 @@ export const ChatMessagesPageView = ({ chatId }: { chatId: string }) => {
                 </div>
 
                 <div className="flex items-center gap-3">
-                    <Select value={selectedModel} onValueChange={setSelectedModel}>
-                        <SelectTrigger className="w-48 h-9 text-xs bg-background border-border/60 rounded-xl">
-                            <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="openai/gpt-oss-20b:groq">GPT OSS 20B</SelectItem>
-                        </SelectContent>
-                    </Select>
+                    <SelectModel
+                        value={selectedModel}
+                        onValueChange={setSelectedModel}
+                        onValudIdChange={setSelectedModelId}
+                    />
                 </div>
             </header>
 

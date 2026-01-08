@@ -73,7 +73,10 @@ class HuggingFaceService:
         )
         if stream:
             for chunk in stream_content:
-                res = chunk.choices[0].delta.content
-                if res:
-                    yield res.encode("utf-8")
+                try:
+                    res = chunk.choices[0].delta.content
+                    if res:
+                        yield res.encode("utf-8")
+                except Exception as e:
+                    print("Error:", str(e))
         return stream_content
