@@ -9,10 +9,8 @@ class HFModel(Base, PrimaryKeyMixin, TimestampMixin):
     __tablename__ = "hf_models"
 
     display_name: Mapped[str] = mapped_column(String(100), nullable=False)
-    model_id: Mapped[str] = mapped_column(String(255), nullable=False, unique=True, index=True)
-    model_provider: Mapped[str] = mapped_column(
-        String(255), nullable=False, unique=True, index=True
-    )
+    model_id: Mapped[str] = mapped_column(String(255), nullable=False, index=True)
+    model_provider: Mapped[str] = mapped_column(String(255), nullable=False, index=True)
     model_url: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     description: Mapped[str | None] = mapped_column(String(255), nullable=True)

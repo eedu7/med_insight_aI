@@ -1,10 +1,10 @@
-from typing import Annotated, List
+from typing import Annotated, List, Literal
 from uuid import UUID
 
 from fastapi import APIRouter, BackgroundTasks, Depends, File, Form, Request, UploadFile, status
 
 from controllers import ScanController
-from core.dependencies import AuthenticationRequired, HuggingFaceServiceDep, MinioDep
+from core.dependencies import AuthenticationRequired, MinioDep
 from core.exceptions import BadRequestException
 from core.factory import factory
 from core.schemas.scan import ScanRead, ScanReadComplete
@@ -39,10 +39,10 @@ async def get_scan_by_id(
 async def scan(
     request: Request,
     background_tasks: BackgroundTasks,
-    hf_service: HuggingFaceServiceDep,
     scan_controller: ScanControllerDep,
     minio: MinioDep,
     model: str = Form(...),
+    modelType: Literal["skin", "lung", "colon"] = Form(...),  # make it required
     files: List[UploadFile] = File(...),
 ):
     if not files:
@@ -57,10 +57,10 @@ async def scan(
             process_image,
             file=file,
             scan_id=str(scan.id),
-            hf_service=hf_service,
             minio=minio,
             scan_controller=scan_controller,
             model=model,
+            modelType=modelType,  # pass modelType
         )
 
     return scan

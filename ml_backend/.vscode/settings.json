@@ -1,0 +1,29 @@
+{
+    "[python]": {
+        "diffEditor.ignoreTrimWhitespace": false,
+        "editor.defaultColorDecorators": "never",
+        "editor.defaultFormatter": "charliermarsh.ruff",
+        "editor.formatOnSave": true
+    },
+    "cSpell.words": [
+        "Supabase"
+    ],
+    "editor.autoIndent": "full",
+    "editor.codeActionsOnSave": {
+        "source.fixAll": "always",
+        "source.fixAll.ruff": "always",
+        "source.organizeImports.ruff": "always",
+        "source.sort.json": "always"
+    },
+    "python-envs.pythonProjects": [],
+    "ruff.codeAction.fixViolation": {
+        "enable": true
+    },
+    "ruff.enable": true,
+    "ruff.fixAll": true,
+    "ruff.format.backend": "uv",
+    "ruff.lineLength": 100,
+    "ruff.lint.enable": true,
+    "ruff.organizeImports": true,
+    "ty.completions.autoImport": true
+}

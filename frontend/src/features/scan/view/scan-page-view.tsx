@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { SelectModel } from "@/features/models/components/SelectModel";
+import { SCANMODELS } from "@/features/models/models";
 import {
     AlertCircle,
     BrainCircuit,
@@ -52,8 +53,15 @@ export const ScanPageView = () => {
     const handleAnalyze = () => {
         if (items.length === 0 || !scanModel) return;
 
+        const selectedModel = SCANMODELS.find(
+            (m) => m.model_id === scanModel
+        );
+
+        if (!selectedModel) return;
+
         const formData = new FormData();
         formData.append("model", scanModel);
+        formData.append("modelType", selectedModel.modelType);
         items.forEach((item) => formData.append("files", item.file));
 
         createScanMutation.mutate(formData);
@@ -81,7 +89,8 @@ export const ScanPageView = () => {
                                 <Sparkles className="h-4 w-4" /> Protocol Selection
                             </div>
                             <SelectModel
-                                onValudIdChange={setScanModelId}
+                                modelType="scan"
+                                onValueIdChange={setScanModelId}
                                 value={scanModel}
                                 onValueChange={setScanModel}
                             />

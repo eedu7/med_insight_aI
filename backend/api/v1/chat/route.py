@@ -1,7 +1,7 @@
 from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, Query, Request
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
 from fastapi.responses import StreamingResponse
 
 from controllers import ChatController
@@ -49,50 +49,54 @@ async def create_chat_message(
     hf: HuggingFaceServiceDep,
     stream: Annotated[bool, Query()] = True,
 ):
-    # Save User message
-    await chat_controller.create_chat_message(
-        role="user",
-        content=data.content,
-        chat_id=data.chat_id,
-        model_id=data.model_id,
-    )
-
-    async def stream_generator():
-        gen = hf.text_generation(
-            messages=[{"role": "user", "content": data.content}],  # type: ignore
-            model=data.model_name,
-            stream=stream,
+    try:
+        # Save User message
+        await chat_controller.create_chat_message(
+            role="user",
+            content=data.content,
+            chat_id=data.chat_id,
+            model_id=data.model_id,
         )
 
-        ai_response = []
+        async def stream_generator():
+            gen = hf.text_generation(
+                messages=[{"role": "user", "content": data.content}],  # type: ignore
+                model=data.model_name,
+                stream=stream,
+            )
 
-        for chunk in gen:
-            if chunk:
-                ai_response.append(chunk.decode("utf-8"))  # type: ignore
-                yield chunk.decode("utf-8")  # type: ignore
+            ai_response = []
 
-        content = "".join(ai_response)
+            for chunk in gen:
+                if chunk:
+                    ai_response.append(chunk.decode("utf-8"))  # type: ignore
+                    yield chunk.decode("utf-8")  # type: ignore
 
+            content = "".join(ai_response)
+
+            # Save AI Response
+            await chat_controller.create_chat_message(
+                role="assistant",
+                model_id=data.model_id,
+                content=content,
+                chat_id=data.chat_id,
+            )
+
+        if stream:
+            return StreamingResponse(stream_generator(), media_type="text/event-stream")
+
+        result = hf.text_generation(
+            messages=[{"role": "user", "content": data.content}],  # type: ignore
+            model=data.model_name,
+            stream=False,
+        )
         # Save AI Response
         await chat_controller.create_chat_message(
             role="assistant",
             model_id=data.model_id,
-            content=content,
+            content=(str(result)).decode("utf-8"),  # type: ignore
             chat_id=data.chat_id,
         )
 
-    if stream:
-        return StreamingResponse(stream_generator(), media_type="text/event-stream")
-
-    result = hf.text_generation(
-        messages=[{"role": "user", "content": data.content}],  # type: ignore
-        model=data.model_name,
-        stream=False,
-    )
-    # Save AI Response
-    await chat_controller.create_chat_message(
-        role="assistant",
-        model_id=data.model_id,
-        content=(str(result)).decode("utf-8"),  # type: ignore
-        chat_id=data.chat_id,
-    )
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))

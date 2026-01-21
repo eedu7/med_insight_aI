@@ -1,41 +1,53 @@
 "use client";
+
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useGetModels } from '../hooks/use-models';
+import { SCANMODELS } from '../models';
 
 interface Props {
+  modelType: 'chat' | 'scan';
   value: string;
   onValueChange: (value: string) => void;
-  onValudIdChange: (value: string) => void
+  onValueIdChange: (value: string) => void;
 }
-export const SelectModel = ({ value, onValueChange, onValudIdChange }: Props) => {
+
+export const SelectModel = ({ value, modelType, onValueChange, onValueIdChange }: Props) => {
   const { data: models } = useGetModels();
+
   const handleChange = (modelId: string) => {
     onValueChange(modelId);
 
-    const selectedRow = models?.find(
-      (m) => m.model_id === modelId
-    )
+    const selectedRow = models?.find((m) => m.model_id === modelId);
 
     if (selectedRow) {
-      onValudIdChange(selectedRow.id)
+      onValueIdChange(selectedRow.id);
     }
+  };
 
-  }
   return (
-    <Select
-      value={value}
-      onValueChange={handleChange}
-    >
-      <SelectTrigger className='max-w-md w-full'>
-        <SelectValue placeholder="Select a models" />
+    <Select value={value} onValueChange={handleChange}>
+      <SelectTrigger className="max-w-md w-full">
+        <SelectValue placeholder="Select a model" />
       </SelectTrigger>
-      <SelectContent className='max-w-md w-full'>
+
+      <SelectContent className="max-w-md w-full">
+
         {
-          models?.map(({ id, display_name, model_id }) => (
+          modelType === "chat" &&
+          models
+            ?.filter((m) => m.task_type === 'chat')
+            .map(({ id, model_id, display_name }) => (
+              <SelectItem key={id} value={model_id}>
+                {display_name}
+              </SelectItem>
+            ))}
+        {
+          modelType === "scan" &&
+          SCANMODELS.map(({ id, display_name, model_id }) => (
             <SelectItem key={id} value={model_id}>{display_name}</SelectItem>
           ))
         }
       </SelectContent>
     </Select>
-  )
-}
+  );
+};

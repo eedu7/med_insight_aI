@@ -1,15 +1,7 @@
 from datetime import datetime
-from enum import StrEnum
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict
-
-
-class TaskType(StrEnum):
-    TEXT = "text"
-    CLASSIFICATION = "classification"
-    SEGMENTATION = "segmentation"
-    TOKEN = "token"
 
 
 class HFModelBase(BaseModel):
@@ -21,7 +13,7 @@ class HFModelBase(BaseModel):
 
     description: str | None = None
 
-    task_type: TaskType | None = None
+    task_type: str | None = None
     medical_domain: str | None = None
 
     accuracy: float | None = None

@@ -125,9 +125,10 @@ export const ChatMessagesPageView = ({ chatId }: { chatId: string }) => {
 
                 <div className="flex items-center gap-3">
                     <SelectModel
+                        modelType="chat"
                         value={selectedModel}
                         onValueChange={setSelectedModel}
-                        onValudIdChange={setSelectedModelId}
+                        onValueIdChange={setSelectedModelId}
                     />
                 </div>
             </header>

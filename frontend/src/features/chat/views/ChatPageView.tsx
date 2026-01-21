@@ -68,7 +68,8 @@ export const ChatPageView = () => {
                                 <Activity className="h-3 w-3" /> Select Analysis Engine
                             </label>
                             <SelectModel
-                                onValudIdChange={setSelectedModelId}
+                                modelType="chat"
+                                onValueIdChange={setSelectedModelId}
                                 value={selectedModel}
                                 onValueChange={setSelectedModel}
                             />

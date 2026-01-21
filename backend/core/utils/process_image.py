@@ -1,19 +1,22 @@
+from typing import Literal
 from uuid import uuid4
 
 from fastapi import UploadFile
 
 from services import get_openai_service
+from services.model_provider import ModelProvider
 
 openai = get_openai_service()
+model_provider = ModelProvider(base_url="http://localhost:8080")
 
 
 async def process_image(
     file: UploadFile,
     scan_id: str,
-    hf_service,
     minio,
     scan_controller,
     model: str,
+    modelType: Literal["skin", "lung", "colon"],
 ):
     file_name = f"{scan_id}/{uuid4()}-{file.filename}"
     content_type = file.content_type or "image/png"
@@ -26,13 +29,13 @@ async def process_image(
     content = await file.read()
 
     try:
-        hf_result = hf_service.scan(
+        hf_result = model_provider.scan(
             image_bytes=content,
-            model=model,
+            modelType=modelType,
             content_type=content_type,
         )
     except Exception as e:
-        print("HF Model:", str(e))
+        print("Model Provider:", str(e))
         await scan_controller.update_scanned_image(
             scanned_image_id=str(scanned_image.id),
             attributes={"status": "failed", "error": str(e)},
@@ -43,7 +46,6 @@ async def process_image(
         minio.upload_image(file_name, content, content_type)
     except Exception as e:
         print("Minio:", str(e))
-
         await scan_controller.update_scanned_image(
             scanned_image_id=str(scanned_image.id),
             attributes={"status": "failed", "error": "upload_failed"},
@@ -54,7 +56,6 @@ async def process_image(
         summary = openai.generate_summary(hf_result)
     except Exception as e:
         print("OpenAI:", str(e))
-
         await scan_controller.update_scanned_image(
             scanned_image_id=str(scanned_image.id),
             attributes={"status": "failed", "error": "summary_failed"},
